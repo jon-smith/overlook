@@ -3,29 +3,29 @@ import { Parallax } from 'react-parallax';
 import Logo from './components/logo';
 import background from './img/background1.jpg';
 import { Counter } from './features/counter/Counter';
-import './App.css';
-import './glitch.scss';
+import styles from './app.module.css';
+import glitchStyles from './glitch.module.scss';
 
 function App() {
 	return (
-		<div className="App">
+		<div className={styles.app}>
 			<Parallax
 				blur={{ min: -30, max: 50 }}
 				bgImage={background}
 				bgImageAlt="background"
 				strength={300}
 			>
-				<div className="app-page">
+				<div className={styles.appPage}>
 					<Logo />
 					WELCOME TO THE
-					<div className="glitch" data-text="OVERLOOK">
+					<div className={glitchStyles.glitch} data-text="OVERLOOK">
 						OVERLOOK
 					</div>
 					HOTEL
 				</div>
 			</Parallax>
 			<Parallax blur={1} strength={200}>
-				<div className="app-page">
+				<div className={styles.appPage}>
 					Redux example
 					<Counter />
 				</div>

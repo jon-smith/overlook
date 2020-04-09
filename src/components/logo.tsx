@@ -1,4 +1,5 @@
 import React from 'react';
+import styles from './logo.module.css';
 
 const buildHexPoints = (radius: number, midX: number, midY: number) => {
 	return [0, 1, 2, 3, 4, 5, 6]
@@ -22,7 +23,7 @@ const Logo = () => {
 	const outerSize = dimension * 0.4;
 
 	return (
-		<svg className="App-logo" viewBox={`0 0 ${dimension} ${dimension}`}>
+		<svg className={styles.logo} viewBox={`0 0 ${dimension} ${dimension}`}>
 			{buildHex(outerSize, '#2e1c01')}
 			{buildHex(outerSize * 0.85, '#ffb347')}
 			{buildHex(outerSize * 0.65, '#2e1c01')}
