@@ -11,4 +11,14 @@
 	align-items: center;
 	justify-content: center;
 	font-size: calc(10px + 2vmin);
+
+	&Ht2 {
+		min-height: 200vh;
+	}
+	&Ht3 {
+		min-height: 300vh;
+	}
+	&Ht4 {
+		min-height: 400vh;
+	}
 }
