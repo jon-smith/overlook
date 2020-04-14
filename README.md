@@ -1,4 +1,4 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app), using the [Redux](https://redux.js.org/) and [Redux Toolkit](https://redux-toolkit.js.org/) template.
+React SPA demonstrating parallax scrolling, CSS effects and some simple animations.
 
 ## Available Scripts
 
@@ -37,8 +37,13 @@ Instead, it will copy all the configuration files and the transitive dependencie
 
 You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
 
-## Learn More
+## Third-party
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app), using the [Redux](https://redux.js.org/) and [Redux Toolkit](https://redux-toolkit.js.org/) template.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+[react-parallax]
+(https://github.com/rrutsche/react-parallax) - [MIT](https://opensource.org/licenses/MIT).
+
+[Iconify React](https://github.com/iconify/iconify-react) - [MIT](https://opensource.org/licenses/MIT).
+
+[Twemoji (Twitter Emoji)](https://github.com/twitter/twemoji) - [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
