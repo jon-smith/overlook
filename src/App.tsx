@@ -27,6 +27,24 @@ const convertDoorScenePercentage = (percentage: number) => {
 	return (percentage - startP) / (1 - startP);
 };
 
+const scrollToId = (id: string) => {
+	const anchor = document.querySelector(`#${id}`);
+	if (anchor) anchor.scrollIntoView({ behavior: 'smooth', block: 'end' });
+};
+
+type NavID = 'top' | 'door-scene' | 'bottom';
+
+const navDivProps = (clickId: NavID) => {
+	return {
+		onClick: () => scrollToId(clickId),
+		role: 'button'
+	};
+};
+
+const topProps = navDivProps('door-scene');
+const doorSceneProps = navDivProps('bottom');
+const bottomProps = navDivProps('top');
+
 function App() {
 	return (
 		<div className={styles.app}>
@@ -36,7 +54,7 @@ function App() {
 				bgImageAlt="background"
 				strength={300}
 			>
-				<div className={styles.appPage}>
+				<div className={styles.appPage} id="top" {...topProps}>
 					<Logo />
 					WELCOME TO THE
 					<div className={glitchStyles.glitch} data-text="OVERLOOK">
@@ -51,17 +69,16 @@ function App() {
 				renderLayer={percentage => (
 					<>
 						<FourPageNoiseCanvas />
-
-						<div className={styles.appPageHt4}>
+						<div className={styles.appPageHt4} id="door-scene">
 							<DoorScene percentage={convertDoorScenePercentage(percentage)} />
 						</div>
-						<div className={`${styles.appPageHt4} ${styles.vignette}`} />
+						<div className={`${styles.appPageHt4} ${styles.vignette}`} {...doorSceneProps} />
 					</>
 				)}
 			/>
 			<div className={styles.appPage} />
 			<Parallax strength={200}>
-				<div className={styles.appPage}>
+				<div className={styles.appPage} id="bottom" {...bottomProps}>
 					Redux example
 					<Counter />
 				</div>
