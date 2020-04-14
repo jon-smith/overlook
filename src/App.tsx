@@ -51,9 +51,11 @@ function App() {
 				renderLayer={percentage => (
 					<>
 						<FourPageNoiseCanvas />
+
 						<div className={styles.appPageHt4}>
 							<DoorScene percentage={convertDoorScenePercentage(percentage)} />
 						</div>
+						<div className={`${styles.appPageHt4} ${styles.vignette}`} />
 					</>
 				)}
 			/>

@@ -22,3 +22,53 @@
 		min-height: 400vh;
 	}
 }
+
+.vignette {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	box-shadow: inset 0px 0px 150px 20px black;
+	mix-blend-mode: multiply;
+	-webkit-animation: vignette-anim 3s infinite; /* Safari 4+ */
+	-moz-animation: vignette-anim 3s infinite; /* Fx 5+ */
+	-o-animation: vignette-anim 3s infinite; /* Opera 12+ */
+	animation: vignette-anim 3s infinite; /* IE 10+, Fx 29+ */
+}
+
+@-webkit-keyframes vignette-anim {
+	0%,
+	100% {
+		opacity: 1;
+	}
+	50% {
+		opacity: 0.5;
+	}
+}
+@-moz-keyframes vignette-anim {
+	0%,
+	100% {
+		opacity: 1;
+	}
+	50% {
+		opacity: 0.5;
+	}
+}
+@-o-keyframes vignette-anim {
+	0%,
+	100% {
+		opacity: 1;
+	}
+	50% {
+		opacity: 0.5;
+	}
+}
+@keyframes vignette-anim {
+	0%,
+	100% {
+		opacity: 1;
+	}
+	50% {
+		opacity: 0.5;
+	}
+}
