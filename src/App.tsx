@@ -1,13 +1,13 @@
 import React from 'react';
 import { Parallax } from 'react-parallax';
-import Logo from './components/logo';
-import NoiseCanvas from './components/noise-canvas';
-import background from './img/background1.jpg';
-import { Counter } from './features/counter/Counter';
-import styles from './app.module.scss';
-import glitchStyles from './glitch.module.scss';
-import useWindowSize from './hooks/use-window-size';
-import DoorScene from './pages/door-scene';
+import Logo from 'components/logo';
+import NoiseCanvas from 'components/noise-canvas';
+import background from 'img/background1.jpg';
+import { Counter } from 'features/counter/Counter';
+import styles from 'app.module.scss';
+import glitchStyles from 'glitch.module.scss';
+import useWindowSize from 'hooks/use-window-size';
+import DoorScene from 'pages/door-scene';
 
 const FourPageNoiseCanvas = () => {
 	const { width, height } = useWindowSize();

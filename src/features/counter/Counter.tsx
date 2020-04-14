@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { decrement, increment, incrementByAmount } from '../../state/counterSlice';
-import { selectCount } from '../../state/selectors';
-import { incrementAsync } from '../../state/thunks';
+import { decrement, increment, incrementByAmount } from 'state/counterSlice';
+import { selectCount } from 'state/selectors';
+import { incrementAsync } from 'state/thunks';
 import styles from './Counter.module.css';
 
 export function Counter() {
