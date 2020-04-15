@@ -15,7 +15,7 @@ const FourPageNoiseCanvas = () => {
 		<NoiseCanvas
 			width={width}
 			height={height * 4}
-			className={styles.appPageHt4}
+			className={styles.vh4}
 			style={{ position: 'absolute', left: 0, top: 0 }}
 		/>
 	);
@@ -64,12 +64,10 @@ function App() {
 					HOTEL
 				</div>
 			</Parallax>
-			<Parallax strength={200}>
-				<div className={styles.appPage} id="carpet" {...carpetProps}>
+			<Parallax strength={400}>
+				<div className={styles.appPage} id="carpet" {...carpetProps} />
+				<Background className={styles.vh2}>
 					<LogoBackground />
-				</div>
-				<Background className={styles.appPage}>
-					<svg />
 				</Background>
 			</Parallax>
 			<Parallax
@@ -78,10 +76,13 @@ function App() {
 				renderLayer={percentage => (
 					<>
 						<FourPageNoiseCanvas />
-						<div className={styles.appPageHt4} id="door-scene">
+						<div className={`${styles.appPage} ${styles.vh4}`} id="door-scene">
 							<DoorScene percentage={convertDoorScenePercentage(percentage)} />
 						</div>
-						<div className={`${styles.appPageHt4} ${styles.vignette}`} {...doorSceneProps} />
+						<div
+							className={`${styles.appPage} ${styles.vh4} ${styles.vignette}`}
+							{...doorSceneProps}
+						/>
 					</>
 				)}
 			/>

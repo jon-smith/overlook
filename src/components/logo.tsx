@@ -45,7 +45,7 @@ export const Logo = () => {
 
 export const LogoBackground = () => {
 	return (
-		<svg width="100vw" height="100vh">
+		<svg width="100%" height="100%">
 			<defs>
 				<pattern id="pattern" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
 					<SVGElements size={100} />

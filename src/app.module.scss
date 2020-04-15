@@ -2,25 +2,34 @@
 	text-align: center;
 	background-color: black;
 	color: white;
+	font-size: calc(10px + 2vmin);
 }
 
 .appPage {
 	min-height: 100vh;
+	height: 100vh;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
-	font-size: calc(10px + 2vmin);
+}
 
-	&Ht2 {
-		min-height: 200vh;
-	}
-	&Ht3 {
-		min-height: 300vh;
-	}
-	&Ht4 {
-		min-height: 400vh;
-	}
+.vh2 {
+	min-height: 200vh;
+	height: 200vh;
+	width: 100vw;
+}
+
+.vh3 {
+	min-height: 300vh;
+	height: 300vh;
+	width: 100vw;
+}
+
+.vh4 {
+	min-height: 400vh;
+	height: 400vh;
+	width: 100vw;
 }
 
 .vignette {

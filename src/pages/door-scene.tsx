@@ -6,20 +6,21 @@ import angry from '@iconify/icons-twemoji/pouting-face';
 
 const FixedIconContainer = <T extends {}>(props: {
 	icon: T;
-	width: string;
+	widthEm: number;
 	hFlip?: boolean;
 	bottomOffsetPc?: number;
-	leftOffsetPx?: number;
+	bottomOffsetEm?: number;
+	leftOffsetEm?: number;
 }) => (
 	<div
 		style={{
 			position: 'fixed',
-			bottom: `${props.bottomOffsetPc ?? 0}vh`,
-			left: `${props.leftOffsetPx ?? 0}px`,
+			bottom: `calc(${props.bottomOffsetPc ?? 0}vh + ${props.bottomOffsetEm ?? 0}em)`,
+			left: `${props.leftOffsetEm ?? 0}em`,
 			width: '100vw'
 		}}
 	>
-		<Icon icon={props.icon} width={props.width} hFlip={props.hFlip} />
+		<Icon icon={props.icon} width={`${props.widthEm}em`} hFlip={props.hFlip} />
 	</div>
 );
 
@@ -74,7 +75,7 @@ const bottomOffsetAndDoorSize = (p: StageAndRelativeProgress) => {
 
 const calcAxeOffset = (p: StageAndRelativeProgress) => {
 	if (p.stage === 'axe' || p.stage === 'face') {
-		const maxOffset = p.stage === 'face' ? 90 : 50;
+		const maxOffset = p.stage === 'face' ? 5 : 3.5;
 
 		if (p.relativeP <= 1 / 3) return p.relativeP * 3 * maxOffset;
 		if (p.relativeP <= 2 / 3) return maxOffset;
@@ -87,7 +88,7 @@ const calcAxeOffset = (p: StageAndRelativeProgress) => {
 
 const calcFaceOffset = (p: StageAndRelativeProgress) => {
 	if (p.stage === 'face') {
-		const maxOffset = 60;
+		const maxOffset = 3.5;
 		if (p.relativeP <= 1 / 3) return p.relativeP * 3 * maxOffset;
 		if (p.relativeP <= 2 / 3) return maxOffset;
 
@@ -113,21 +114,23 @@ const DoorScene = (props: { percentage: number }) => {
 			{stageIndex >= stageToIndex('face') && (
 				<FixedIconContainer
 					icon={angry}
-					width="5em"
-					leftOffsetPx={faceOffset}
-					bottomOffsetPc={bottomOffset + 6}
+					widthEm={5}
+					leftOffsetEm={faceOffset}
+					bottomOffsetPc={bottomOffset}
+					bottomOffsetEm={3}
 				/>
 			)}
 			{stageIndex >= stageToIndex('axe') && (
 				<FixedIconContainer
 					icon={axe}
-					width="5em"
+					widthEm={5}
 					hFlip={true}
-					leftOffsetPx={axeOffset}
-					bottomOffsetPc={bottomOffset + 3}
+					leftOffsetEm={axeOffset}
+					bottomOffsetPc={bottomOffset}
+					bottomOffsetEm={1.5}
 				/>
 			)}
-			<FixedIconContainer icon={door} width={`${doorSize}em`} bottomOffsetPc={bottomOffset} />
+			<FixedIconContainer icon={door} widthEm={doorSize} bottomOffsetPc={bottomOffset} />
 		</div>
 	);
 };
