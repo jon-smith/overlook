@@ -34,8 +34,6 @@ const NoiseCanvas = (props: Props) => {
 		if (canvasRef.current) {
 			const ctx = canvasRef.current.getContext('2d');
 			if (ctx) {
-				// canvasRef.current.width = width;
-				// canvasRef.current.height = height;
 				noiseFrames.current = Array(10)
 					.fill(0)
 					.map(() => createNoise(ctx, width, height));
