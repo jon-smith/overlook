@@ -24,9 +24,9 @@ const SVGElements = (props: { size: number }) => {
 	return (
 		<>
 			{buildHex(outerSize, '#2e1c01')}
-			{buildHex(outerSize * 0.85, '#ffb347')}
-			{buildHex(outerSize * 0.65, '#2e1c01')}
-			{buildHex(outerSize * 0.45, '#ff443a')}
+			{buildHex(outerSize * 0.8, '#ffb347')}
+			{buildHex(outerSize * 0.6, '#2e1c01')}
+			{buildHex(outerSize * 0.4, '#ff443a')}
 		</>
 	);
 };
