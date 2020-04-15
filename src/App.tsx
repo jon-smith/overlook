@@ -1,6 +1,6 @@
 import React from 'react';
-import { Parallax } from 'react-parallax';
-import Logo from 'components/logo';
+import { Parallax, Background } from 'react-parallax';
+import Logo, { LogoBackground } from 'components/logo';
 import NoiseCanvas from 'components/noise-canvas';
 import background from 'img/background1.jpg';
 import { Counter } from 'features/counter/Counter';
@@ -32,7 +32,7 @@ const scrollToId = (id: string) => {
 	if (anchor) anchor.scrollIntoView({ behavior: 'smooth', block: 'end' });
 };
 
-type NavID = 'top' | 'door-scene' | 'bottom';
+type NavID = 'top' | 'door-scene' | 'bottom' | 'carpet';
 
 const navDivProps = (clickId: NavID) => {
 	return {
@@ -41,7 +41,8 @@ const navDivProps = (clickId: NavID) => {
 	};
 };
 
-const topProps = navDivProps('door-scene');
+const topProps = navDivProps('carpet');
+const carpetProps = navDivProps('door-scene');
 const doorSceneProps = navDivProps('bottom');
 const bottomProps = navDivProps('top');
 
@@ -63,6 +64,14 @@ function App() {
 					HOTEL
 				</div>
 			</Parallax>
+			<Parallax strength={200}>
+				<div className={styles.appPage} id="carpet" {...carpetProps}>
+					<LogoBackground />
+				</div>
+				<Background className={styles.appPage}>
+					<svg />
+				</Background>
+			</Parallax>
 			<Parallax
 				bgImage="dummy"
 				strength={0}
@@ -76,7 +85,6 @@ function App() {
 					</>
 				)}
 			/>
-			<div className={styles.appPage} />
 			<Parallax strength={200}>
 				<div className={styles.appPage} id="bottom" {...bottomProps}>
 					Redux example
