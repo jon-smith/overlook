@@ -78,10 +78,8 @@ const calcFaceOffset = (p: StageAndRelativeProgress) => {
 	return 0;
 };
 
-const DoorScene = (props: { percentage: number }) => {
+const DoorSceneContents = (props: { percentage: number }) => {
 	const { percentage } = props;
-	const hideAll = percentage <= 0.01 || percentage >= 0.99;
-	if (hideAll) return <div />;
 
 	const stageAndP = stageAndRelativeProgress(percentage);
 	const stageIndex = stageToIndex(stageAndP.stage);
@@ -90,7 +88,7 @@ const DoorScene = (props: { percentage: number }) => {
 	const axeOffset = calcAxeOffset(stageAndP);
 	const faceOffset = calcFaceOffset(stageAndP);
 	return (
-		<div>
+		<>
 			{stageIndex >= stageToIndex('face') && (
 				<FixedIconContainer
 					icon={angry}
@@ -111,8 +109,14 @@ const DoorScene = (props: { percentage: number }) => {
 				/>
 			)}
 			<FixedIconContainer icon={door} widthEm={doorSize} bottomOffsetPc={bottomOffset} />
-		</div>
+		</>
 	);
+};
+
+const DoorScene = (props: { percentage: number }) => {
+	const { percentage } = props;
+	const hideAll = percentage <= 0.01 || percentage >= 0.99;
+	return <div>{!hideAll && <DoorSceneContents {...props} />}</div>;
 };
 
 export default DoorScene;

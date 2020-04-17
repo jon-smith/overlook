@@ -33,7 +33,7 @@ const scrollToId = (id: string) => {
 	if (anchor) anchor.scrollIntoView({ behavior: 'smooth', block: 'end' });
 };
 
-type NavID = 'top' | 'door-scene' | 'bottom' | 'carpet';
+type NavID = 'top' | 'door-scene' | 'bottom' | 'carpet' | 'ice-cream';
 
 const navDivProps = (clickId: NavID) => {
 	return {
@@ -42,7 +42,8 @@ const navDivProps = (clickId: NavID) => {
 	};
 };
 
-const topProps = navDivProps('carpet');
+const topProps = navDivProps('ice-cream');
+const iceCreamProps = navDivProps('carpet');
 const carpetProps = navDivProps('door-scene');
 const doorSceneProps = navDivProps('bottom');
 const bottomProps = navDivProps('top');
@@ -66,7 +67,12 @@ function App() {
 				</div>
 			</Parallax>
 			<Parallax strength={400}>
-				<div className={styles.appPage} id="carpet" {...carpetProps}>
+				<div className={styles.appPage} id="ice-cream" {...iceCreamProps}>
+					You like ice cream, doc?
+				</div>
+			</Parallax>
+			<Parallax strength={500}>
+				<div className={`${styles.appPage} ${styles.vh1point5}`} id="carpet" {...carpetProps}>
 					<GradySisters />
 				</div>
 				<Background className={styles.vh2}>
