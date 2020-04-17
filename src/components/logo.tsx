@@ -2,9 +2,12 @@ import React from 'react';
 import styles from './logo.module.css';
 
 const logoMainDark = '#2e1c01';
+const logoMainOrange = '#ffb347';
+const logoMainRed = '#ff443a';
+
 const logoBackgroundDark = 'black';
-const logoOrange = '#ffb347';
-const logoRed = '#ff443a';
+const logoBackgroundOrange = '#ea8900';
+const logoBackgroundRed = '#c30a00';
 
 const hexPointFromEdgeIndex = (
 	index: number,
@@ -39,9 +42,9 @@ const SVGElements = (props: { size: number }) => {
 	return (
 		<>
 			{buildHex(outerSize, logoMainDark)}
-			{buildHex(outerSize * 0.8, logoOrange)}
+			{buildHex(outerSize * 0.8, logoMainOrange)}
 			{buildHex(outerSize * 0.6, logoMainDark)}
-			{buildHex(outerSize * 0.4, logoRed)}
+			{buildHex(outerSize * 0.4, logoMainRed)}
 		</>
 	);
 };
@@ -63,9 +66,9 @@ const BackgroundSVGElements = (props: { width: number }) => {
 		return (
 			<>
 				{includeOuter && buildHex(hexRad, logoBackgroundDark)}
-				{buildHex(hexRad * 0.75, logoOrange)}
+				{buildHex(hexRad * 0.75, logoBackgroundOrange)}
 				{buildHex(hexRad * 0.5, logoBackgroundDark)}
-				{buildHex(hexRad * 0.25, logoRed)}
+				{buildHex(hexRad * 0.25, logoBackgroundRed)}
 			</>
 		);
 	};
