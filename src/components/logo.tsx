@@ -1,6 +1,11 @@
 import React from 'react';
 import styles from './logo.module.css';
 
+const logoMainDark = '#2e1c01';
+const logoBackgroundDark = 'black';
+const logoOrange = '#ffb347';
+const logoRed = '#ff443a';
+
 const hexPointFromEdgeIndex = (
 	index: number,
 	radius: number,
@@ -33,10 +38,10 @@ const SVGElements = (props: { size: number }) => {
 
 	return (
 		<>
-			{buildHex(outerSize, '#2e1c01')}
-			{buildHex(outerSize * 0.8, '#ffb347')}
-			{buildHex(outerSize * 0.6, '#2e1c01')}
-			{buildHex(outerSize * 0.4, '#ff443a')}
+			{buildHex(outerSize, logoMainDark)}
+			{buildHex(outerSize * 0.8, logoOrange)}
+			{buildHex(outerSize * 0.6, logoMainDark)}
+			{buildHex(outerSize * 0.4, logoRed)}
 		</>
 	);
 };
@@ -49,29 +54,25 @@ const BackgroundSVGElements = (props: { width: number }) => {
 	const hexWidth = (width * 8) / 7;
 	const lineThickness = hexWidth / 8;
 	const hexRad = hexMinorToMajorDimension(hexWidth) * 0.5;
-	const offsetX = 0; // -width * 0.125;
-	const offsetY = 0;
 
 	const buildMainLogo = (centreX: number, centreY: number, includeOuter: boolean) => {
 		const buildHex = (radius: number, color: string) => {
-			const p = buildHexPointsString(radius, centreX + offsetX, centreY + offsetY);
+			const p = buildHexPointsString(radius, centreX, centreY);
 			return <polygon points={p} fill={color} />;
 		};
 		return (
 			<>
-				{includeOuter && buildHex(hexRad, 'black')}
-				{buildHex(hexRad * 0.75, '#ffb347')}
-				{buildHex(hexRad * 0.5, 'black')}
-				{buildHex(hexRad * 0.25, '#ff443a')}
+				{includeOuter && buildHex(hexRad, logoBackgroundDark)}
+				{buildHex(hexRad * 0.75, logoOrange)}
+				{buildHex(hexRad * 0.5, logoBackgroundDark)}
+				{buildHex(hexRad * 0.25, logoRed)}
 			</>
 		);
 	};
 
 	const buildFillLine = (centreX: number, top: number) => {
 		const x = centreX - lineThickness * 0.5;
-		return (
-			<rect x={x + offsetX} y={top + offsetY} width={lineThickness} height={hexRad} fill="black" />
-		);
+		return <rect x={x} y={top} width={lineThickness} height={hexRad} fill={logoBackgroundDark} />;
 	};
 
 	const hOffset = hexRad * 0.75;
@@ -119,7 +120,7 @@ export const Logo = () => {
 };
 
 export const LogoBackground = () => {
-	const width = 40;
+	const width = 30;
 	const height = width * 1.41;
 	return (
 		<svg width="100%" height="100%">
