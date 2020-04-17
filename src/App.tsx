@@ -1,17 +1,17 @@
 import React from 'react';
 import { Parallax, Background } from 'react-parallax';
+import { useWindowSize } from '@react-hook/window-size';
 import Logo, { LogoBackground } from 'components/logo';
 import NoiseCanvas from 'components/noise-canvas';
 import background from 'img/background1.jpg';
 import { Counter } from 'features/counter/Counter';
 import styles from 'app.module.scss';
 import glitchStyles from 'glitch.module.scss';
-import useWindowSize from 'hooks/use-window-size';
 import DoorScene from 'pages/door-scene';
 import GradySisters from 'pages/grady-sisters';
 
 const FourPageNoiseCanvas = () => {
-	const { width, height } = useWindowSize();
+	const [width, height] = useWindowSize(undefined, undefined, { wait: 500 });
 	return (
 		<NoiseCanvas
 			width={width}
