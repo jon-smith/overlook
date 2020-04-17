@@ -8,6 +8,7 @@ import styles from 'app.module.scss';
 import glitchStyles from 'glitch.module.scss';
 import useWindowSize from 'hooks/use-window-size';
 import DoorScene from 'pages/door-scene';
+import GradySisters from 'pages/grady-sisters';
 
 const FourPageNoiseCanvas = () => {
 	const { width, height } = useWindowSize();
@@ -65,7 +66,9 @@ function App() {
 				</div>
 			</Parallax>
 			<Parallax strength={400}>
-				<div className={styles.appPage} id="carpet" {...carpetProps} />
+				<div className={styles.appPage} id="carpet" {...carpetProps}>
+					<GradySisters />
+				</div>
 				<Background className={styles.vh2}>
 					<LogoBackground />
 				</Background>
