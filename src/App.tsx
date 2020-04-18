@@ -3,6 +3,7 @@ import { Parallax, Background } from 'react-parallax';
 import { useWindowSize } from '@react-hook/window-size';
 import Logo, { LogoBackground } from 'components/logo';
 import NoiseCanvas from 'components/noise-canvas';
+import DivAutoHideContent from 'components/div-auto-hide-content';
 import background from 'img/background1.jpg';
 import { Counter } from 'features/counter/Counter';
 import styles from 'app.module.scss';
@@ -85,9 +86,9 @@ function App() {
 				renderLayer={percentage => (
 					<>
 						<FourPageNoiseCanvas />
-						<div className={`${styles.appPage} ${styles.vh4}`} id="door-scene">
+						<DivAutoHideContent className={`${styles.appPage} ${styles.vh4}`} id="door-scene">
 							<DoorScene percentage={convertDoorScenePercentage(percentage)} />
-						</div>
+						</DivAutoHideContent>
 						<div
 							className={`${styles.appPage} ${styles.vh4} ${styles.vignette}`}
 							{...doorSceneProps}
