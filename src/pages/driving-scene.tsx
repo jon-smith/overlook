@@ -48,11 +48,12 @@ const useWindowKeyDown = (handler: (e: KeyboardEvent) => void) => {
 };
 
 interface Props {
-	width: number;
-	height: number;
 	className?: string;
 	style?: React.CSSProperties;
 }
+
+const CANVAS_WIDTH = 500;
+const CANVAS_HEIGHT = 300;
 
 const LEFT_ARROW = 37;
 const RIGHT_ARROW = 39;
@@ -81,8 +82,6 @@ const DrivingScene = (props: Props) => {
 		}
 	});
 
-	const { width, height } = props;
-
 	useEffect(() => {
 		if (canvasRef.current) {
 			const ctx = canvasRef.current.getContext('2d');
@@ -98,7 +97,7 @@ const DrivingScene = (props: Props) => {
 					const startRow = rIndex * 16;
 					const toRow = startRow + nRows * imgDim[1];
 					for (let r = startRow; r < toRow; r += imgDim[1]) {
-						for (let c = -16; c < width + 16; c += imgDim[0]) {
+						for (let c = -16; c < CANVAS_WIDTH + 16; c += imgDim[0]) {
 							ctx.drawImage(img, c - offsetToUse, r, imgDim[0], imgDim[1]);
 						}
 					}
@@ -115,10 +114,10 @@ const DrivingScene = (props: Props) => {
 				drawRow(treeImg, nextRow, 3, [16, 32]);
 
 				const carImg = offsetToUse % 8 > 4 ? carImg1 : carImg2;
-				ctx.drawImage(carImg, width / 2, roadRow * 16, 32, 16);
+				ctx.drawImage(carImg, CANVAS_WIDTH / 2, roadRow * 16, 32, 16);
 			}
 		}
-	}, [width, height, offset]);
+	}, [offset]);
 
 	useInterval(() => {
 		if (!moving) {
@@ -136,8 +135,8 @@ const DrivingScene = (props: Props) => {
 	return (
 		<canvas
 			ref={canvasRef}
-			width={width}
-			height={height}
+			width={CANVAS_WIDTH}
+			height={CANVAS_HEIGHT}
 			style={props.style}
 			className={props.className}
 		/>

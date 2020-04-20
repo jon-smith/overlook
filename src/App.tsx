@@ -25,8 +25,7 @@ const FourPageNoiseCanvas = () => {
 };
 
 const DrivingSceneFullScreen = () => {
-	const [width, height] = useWindowSize(undefined, undefined, { wait: 500 });
-	return <DrivingScene width={width} height={height} className={styles.vh2} />;
+	return <DrivingScene className={styles.drivingSceneCanvas} />;
 };
 
 const convertDoorScenePercentage = (percentage: number) => {
