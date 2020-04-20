@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect, useCallback } from 'react';
 import useWindowScroll from '@react-hook/window-scroll';
 import girlLightSkinTone from '@iconify/icons-twemoji/girl-light-skin-tone';
 import useInterval from 'hooks/use-interval';
+import useStateWithTime from 'hooks/use-state-with-time';
 import FixedIconContainer from 'components/fixed-pos-icon-container';
 
 const elementInWithinYRange = (element: HTMLDivElement, fromP: number, toP: number) => {
@@ -15,20 +16,6 @@ const elementPassedCentre = (element: HTMLDivElement) => {
 	const centre = (top + bottom) * 0.5;
 	const windowCentre = window.innerHeight * 0.5;
 	return windowCentre > 0 && centre < windowCentre;
-};
-
-const useStateWithTime = <T extends unknown>(initial: T) => {
-	const [value, setValue] = useState({ value: initial, time: Date.now() });
-	const setValueAndTime = useCallback(
-		(newValue: T) => {
-			if (value.value !== newValue) {
-				setValue({ value: newValue, time: Date.now() });
-			}
-		},
-		[value.value]
-	);
-
-	return [value.value, setValueAndTime, value.time] as const;
 };
 
 const GradySisters = () => {

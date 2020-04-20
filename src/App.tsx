@@ -10,6 +10,7 @@ import styles from 'app.module.scss';
 import glitchStyles from 'glitch.module.scss';
 import DoorScene from 'pages/door-scene';
 import GradySisters from 'pages/grady-sisters';
+import DrivingScene from 'pages/driving-scene';
 
 const FourPageNoiseCanvas = () => {
 	const [width, height] = useWindowSize(undefined, undefined, { wait: 500 });
@@ -21,6 +22,11 @@ const FourPageNoiseCanvas = () => {
 			style={{ position: 'absolute', left: 0, top: 0 }}
 		/>
 	);
+};
+
+const DrivingSceneFullScreen = () => {
+	const [width, height] = useWindowSize(undefined, undefined, { wait: 500 });
+	return <DrivingScene width={width} height={height} className={styles.vh2} />;
 };
 
 const convertDoorScenePercentage = (percentage: number) => {
@@ -66,6 +72,12 @@ function App() {
 					</div>
 					HOTEL
 				</div>
+			</Parallax>
+			<Parallax strength={200}>
+				<div className={`${styles.appPage}`} id="driving" />
+				<Background className={`${styles.vh1point5}`}>
+					<DrivingSceneFullScreen />
+				</Background>
 			</Parallax>
 			<Parallax strength={400}>
 				<div className={styles.appPage} id="ice-cream" {...iceCreamProps}>
