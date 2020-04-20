@@ -40,7 +40,7 @@ const scrollToId = (id: string) => {
 	if (anchor) anchor.scrollIntoView({ behavior: 'smooth', block: 'end' });
 };
 
-type NavID = 'top' | 'door-scene' | 'bottom' | 'carpet' | 'ice-cream';
+type NavID = 'top' | 'driving' | 'door-scene' | 'bottom' | 'carpet' | 'ice-cream';
 
 const navDivProps = (clickId: NavID) => {
 	return {
@@ -49,7 +49,8 @@ const navDivProps = (clickId: NavID) => {
 	};
 };
 
-const topProps = navDivProps('ice-cream');
+const topProps = navDivProps('driving');
+const drivingProps = navDivProps('ice-cream');
 const iceCreamProps = navDivProps('carpet');
 const carpetProps = navDivProps('door-scene');
 const doorSceneProps = navDivProps('bottom');
@@ -75,7 +76,7 @@ function App() {
 				</div>
 			</Parallax>
 			<Parallax strength={200}>
-				<div className={`${styles.appPage}`} id="driving" />
+				<div className={`${styles.appPage}`} id="driving" {...drivingProps} />
 				<Background className={`${styles.vh1point5}`}>
 					<DrivingSceneFullScreen />
 				</Background>
