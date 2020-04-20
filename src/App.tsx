@@ -4,7 +4,7 @@ import { useWindowSize } from '@react-hook/window-size';
 import Logo, { LogoBackground } from 'components/logo';
 import NoiseCanvas from 'components/noise-canvas';
 import DivAutoHideContent from 'components/div-auto-hide-content';
-import background from 'img/background1.jpg';
+import background from 'img/stmarylake2.jpg';
 import { Counter } from 'features/counter/Counter';
 import styles from 'app.module.scss';
 import glitchStyles from 'glitch.module.scss';
@@ -59,10 +59,11 @@ function App() {
 	return (
 		<div className={styles.app}>
 			<Parallax
-				blur={{ min: -30, max: 50 }}
+				blur={{ min: -3, max: 5 }}
 				bgImage={background}
 				bgImageAlt="background"
-				strength={300}
+				bgImageStyle={{ opacity: '0.6' }}
+				strength={100}
 			>
 				<div className={styles.appPage} id="top" {...topProps}>
 					<Logo />
