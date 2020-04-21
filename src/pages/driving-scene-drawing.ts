@@ -4,6 +4,9 @@ import grassTile from 'img/tiles/grass_16x16.png';
 import mudLightTile from 'img/tiles/mud_light_16x16.png';
 import shrubLightTile from 'img/tiles/shrub_light_16x16.png';
 import roadTile from 'img/tiles/road_mark_16x16.png';
+import waterTile from 'img/tiles/water_16x16.png';
+import waterLeftEdgeTile from 'img/tiles/water_edge_left_16x16.png';
+import waterRightEdgeTile from 'img/tiles/water_edge_right_16x16.png';
 import carSprite1 from 'img/sprites/yellow_car_1_32x16.png';
 import carSprite2 from 'img/sprites/yellow_car_2_32x16.png';
 import { FixedLengthArray } from 'utils/array-utils';
@@ -19,6 +22,9 @@ const smallTreeImg = imgFromSource(smallTreeTile);
 const grassImg = imgFromSource(grassTile);
 const mudLightImg = imgFromSource(mudLightTile);
 const shrubLightImg = imgFromSource(shrubLightTile);
+const waterImg = imgFromSource(waterTile);
+const waterLeftEdgeImg = imgFromSource(waterLeftEdgeTile);
+const waterRightImg = imgFromSource(waterRightEdgeTile);
 const roadImg = imgFromSource(roadTile);
 const carImg1 = imgFromSource(carSprite1);
 const carImg2 = imgFromSource(carSprite2);
@@ -105,11 +111,23 @@ const forestToLake2 = forestToLake([smallTreeImg, mudLightImg, mudLightImg]);
 const forestToLake3 = forestToLake([mudLightImg, mudLightImg, mudLightImg]);
 
 const forestToLake4: AboveRoadDefinition = [
+	[waterLeftEdgeImg, 1],
+	[waterLeftEdgeImg, 1],
+	[waterLeftEdgeImg, 1],
+	[waterLeftEdgeImg, 1],
 	[mudLightImg, 1],
 	[mudLightImg, 1],
 	[mudLightImg, 1],
 	[mudLightImg, 1],
-	[mudLightImg, 1],
+	[mudLightImg, 1]
+];
+
+const lakeTop = (cutout: HTMLImageElement): AboveRoadDefinition => [
+	[waterImg, 1],
+	[waterImg, 1],
+	[waterImg, 1],
+	[waterImg, 1],
+	[cutout, 1],
 	[mudLightImg, 1],
 	[mudLightImg, 1],
 	[mudLightImg, 1],
@@ -144,7 +162,13 @@ const columnsAndDuration: readonly [SceneColumnDefinition, number][] = [
 	[[forestToLake1, forestBottom(grassImg)], 1],
 	[[forestToLake2, forestBottom(grassImg)], 1],
 	[[forestToLake3, forestBottom(grassImg)], 1],
-	[[forestToLake4, forestBottom(grassImg)], 10]
+	[[forestToLake4, forestBottom(grassImg)], 1],
+	// Lake top
+	[[lakeTop(mudLightImg), forestBottom(grassImg)], 5],
+	[[lakeTop(waterLeftEdgeImg), forestBottom(grassImg)], 1],
+	[[lakeTop(waterImg), forestBottom(grassImg)], 3],
+	[[lakeTop(waterRightImg), forestBottom(grassImg)], 1],
+	[[lakeTop(mudLightImg), forestBottom(grassImg)], 5]
 ];
 
 function getColumn(index: number): SceneColumnDefinition | null {
