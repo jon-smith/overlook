@@ -39,14 +39,12 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 
 ## Third-party
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app), using the [Redux](https://redux.js.org/) and [Redux Toolkit](https://redux-toolkit.js.org/) template.
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-[react-parallax]
-(https://github.com/rrutsche/react-parallax) - [MIT](https://opensource.org/licenses/MIT).
+[react-parallax](https://github.com/rrutsche/react-parallax) - [MIT](https://opensource.org/licenses/MIT).
 
 [Iconify React](https://github.com/iconify/iconify-react) - [MIT](https://opensource.org/licenses/MIT).
 
 [Twemoji (Twitter Emoji)](https://github.com/twitter/twemoji) - [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
 
 Champignon Font - Copyright (c) 1999,2010 Claude Pelletier (claudeserieux@gmail.com), with Reserved Font Name "Champignon" = [SIL Open Font License, Version 1.1](http://scripts.sil.org/OFL)
-
