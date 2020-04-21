@@ -12,6 +12,7 @@
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
+	font-family: monospace;
 }
 
 .vh1point5 {
@@ -96,5 +97,69 @@
 	}
 	50% {
 		opacity: 0.5;
+	}
+}
+
+@mixin arrowBase {
+	padding: 1rem; /* Arrow size */
+	box-shadow: 1px -1px 0 1px white inset;
+	-webkit-box-shadow: 2px -2px white inset;
+	border: solid transparent;
+	border-width: 0 0 2rem 2rem;
+	transition: 0.2s;
+	margin-top: 1rem;
+
+	&:hover {
+		box-shadow: 2px -2px 0 2px white inset;
+		-webkit-box-shadow: 4px -4px white inset;
+	}
+}
+
+.arrowUp {
+	@include arrowBase;
+	transform: rotate(135deg);
+}
+
+.arrowRight {
+	@include arrowBase;
+	transform: rotate(225deg);
+}
+
+.arrowLeft {
+	@include arrowBase;
+	transform: rotate(45deg);
+}
+
+.arrowDown {
+	@include arrowBase;
+	transform: rotate(-45deg);
+}
+
+.fadeIn {
+	animation: fadein 3s ease 0s normal forwards 1;
+	-webkit-animation: fadein 3s ease 0s normal forwards 1;
+}
+
+@keyframes fadein {
+	0% {
+		opacity: 0;
+	}
+	66% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+}
+
+@-webkit-keyframes fadein {
+	0% {
+		opacity: 0;
+	}
+	66% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
 	}
 }

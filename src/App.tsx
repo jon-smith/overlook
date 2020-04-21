@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Parallax, Background } from 'react-parallax';
 import { useWindowSize } from '@react-hook/window-size';
 import Logo, { LogoBackground } from 'components/logo';
@@ -11,6 +11,8 @@ import glitchStyles from 'glitch.module.scss';
 import DoorScene from 'pages/door-scene';
 import GradySisters from 'pages/grady-sisters';
 import DrivingScene from 'pages/driving-scene';
+import Typewriter from 'pages/typewriter-scene';
+import DivWithOnYScrollEnter from 'components/div-on-scroll-to-visible';
 
 const FourPageNoiseCanvas = () => {
 	const [width, height] = useWindowSize(undefined, undefined, { wait: 500 });
@@ -39,7 +41,7 @@ const scrollToId = (id: string) => {
 	if (anchor) anchor.scrollIntoView({ behavior: 'smooth', block: 'end' });
 };
 
-type NavID = 'top' | 'driving' | 'door-scene' | 'bottom' | 'carpet' | 'ice-cream';
+type NavID = 'top' | 'driving' | 'door-scene' | 'typewriter' | 'bottom' | 'carpet' | 'ice-cream';
 
 const navDivProps = (clickId: NavID) => {
 	return {
@@ -48,10 +50,23 @@ const navDivProps = (clickId: NavID) => {
 	};
 };
 
-const topProps = navDivProps('driving');
+const ArrowNav = (props: { clickId: NavID; type: 'up' | 'down' }) => {
+	const [fadeIn, setFadeIn] = useState(false);
+	const arrowName = props.type === 'up' ? styles.arrowUp : styles.arrowDown;
+	const className = `${arrowName} ${fadeIn ? styles.fadeIn : ''}`;
+	return (
+		<DivWithOnYScrollEnter
+			className={className}
+			scrollFps={100}
+			onEnterYRange={() => setFadeIn(true)}
+			onLeaveYRange={() => setFadeIn(false)}
+			{...navDivProps(props.clickId)}
+		/>
+	);
+};
+
 const drivingProps = navDivProps('ice-cream');
-const iceCreamProps = navDivProps('carpet');
-const carpetProps = navDivProps('door-scene');
+const carpetProps = navDivProps('typewriter');
 const doorSceneProps = navDivProps('bottom');
 const bottomProps = navDivProps('top');
 
@@ -65,13 +80,14 @@ function App() {
 				bgImageStyle={{ opacity: '0.7' }}
 				strength={100}
 			>
-				<div className={styles.appPage} id="top" {...topProps}>
+				<div className={styles.appPage} id="top">
 					<Logo />
 					WELCOME TO THE
 					<div className={glitchStyles.glitch} data-text="OVERLOOK">
 						OVERLOOK
 					</div>
 					HOTEL
+					<ArrowNav clickId="driving" type="down" />
 				</div>
 			</Parallax>
 			<Parallax strength={200}>
@@ -81,7 +97,7 @@ function App() {
 				</Background>
 			</Parallax>
 			<Parallax strength={400}>
-				<div className={styles.appPage} id="ice-cream" {...iceCreamProps}>
+				<div className={styles.appPage} id="ice-cream">
 					You like ice cream, doc?
 				</div>
 			</Parallax>
@@ -92,6 +108,11 @@ function App() {
 				<Background className={styles.vh2}>
 					<LogoBackground />
 				</Background>
+			</Parallax>
+			<Parallax strength={400}>
+				<div className={styles.appPage} id="typewriter">
+					<Typewriter />
+				</div>
 			</Parallax>
 			<Parallax
 				bgImage="dummy"
@@ -113,6 +134,7 @@ function App() {
 				<div className={styles.appPage} id="bottom" {...bottomProps}>
 					Redux example
 					<Counter />
+					<ArrowNav clickId="driving" type="up" />
 				</div>
 			</Parallax>
 		</div>
