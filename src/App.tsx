@@ -65,7 +65,6 @@ const ArrowNav = (props: { clickId: NavID; type: 'up' | 'down' }) => {
 	);
 };
 
-const drivingProps = navDivProps('ice-cream');
 const carpetProps = navDivProps('typewriter');
 const doorSceneProps = navDivProps('bottom');
 const bottomProps = navDivProps('top');
@@ -91,7 +90,17 @@ function App() {
 				</div>
 			</Parallax>
 			<Parallax strength={200}>
-				<div className={`${styles.appPage} ${styles.vh1point3}`} id="driving" {...drivingProps} />
+				<div className={`${styles.appPage} ${styles.vh1point3}`} id="driving" />
+				<div
+					style={{
+						position: 'absolute',
+						left: '50%',
+						top: '100vh',
+						transform: 'translate(-50%, -20vh)'
+					}}
+				>
+					<ArrowNav clickId="ice-cream" type="down" />
+				</div>
 				<Background className={`${styles.vh1point3}`}>
 					<DrivingSceneFullScreen />
 				</Background>

@@ -1,6 +1,8 @@
 import bigTreeTile from 'img/tiles/tree_16x32.png';
 import smallTreeTile from 'img/tiles/tree_16x16.png';
 import grassTile from 'img/tiles/grass_16x16.png';
+import mudLightTile from 'img/tiles/mud_light_16x16.png';
+import shrubLightTile from 'img/tiles/shrub_light_16x16.png';
 import roadTile from 'img/tiles/road_mark_16x16.png';
 import carSprite1 from 'img/sprites/yellow_car_1_32x16.png';
 import carSprite2 from 'img/sprites/yellow_car_2_32x16.png';
@@ -15,6 +17,8 @@ const imgFromSource = (src: string) => {
 const treeImg = imgFromSource(bigTreeTile);
 const smallTreeImg = imgFromSource(smallTreeTile);
 const grassImg = imgFromSource(grassTile);
+const mudLightImg = imgFromSource(mudLightTile);
+const shrubLightImg = imgFromSource(shrubLightTile);
 const roadImg = imgFromSource(roadTile);
 const carImg1 = imgFromSource(carSprite1);
 const carImg2 = imgFromSource(carSprite2);
@@ -59,7 +63,7 @@ function drawCar(ctx: CanvasRenderingContext2D, sceneProgress: number) {
 	ctx.drawImage(carImg, CANVAS_WIDTH / 2 - 8, (BLANK_ROWS + 9) * 16, 32, 16);
 }
 
-const forestTop: AboveRoadDefinition = [
+const forestTop = (roadside: HTMLImageElement): AboveRoadDefinition => [
 	[treeImg, 2],
 	null,
 	[treeImg, 2],
@@ -68,11 +72,52 @@ const forestTop: AboveRoadDefinition = [
 	null,
 	[treeImg, 2],
 	null,
-	[smallTreeImg, 1]
+	[roadside, 1]
 ];
 
-const forestBottom: BelowRoadDefinition = [
-	[grassImg, 1],
+const forestToLake = (
+	roadside: [HTMLImageElement, HTMLImageElement, HTMLImageElement]
+): AboveRoadDefinition => [
+	[treeImg, 2],
+	null,
+	[treeImg, 2],
+	null,
+	[treeImg, 2],
+	null,
+	[roadside[0], 1],
+	[roadside[1], 1],
+	[roadside[2], 1]
+];
+
+const forestToLake1: AboveRoadDefinition = [
+	[treeImg, 2],
+	null,
+	[treeImg, 2],
+	null,
+	[treeImg, 2],
+	null,
+	[treeImg, 2],
+	null,
+	[mudLightImg, 1]
+];
+
+const forestToLake2 = forestToLake([smallTreeImg, mudLightImg, mudLightImg]);
+const forestToLake3 = forestToLake([mudLightImg, mudLightImg, mudLightImg]);
+
+const forestToLake4: AboveRoadDefinition = [
+	[mudLightImg, 1],
+	[mudLightImg, 1],
+	[mudLightImg, 1],
+	[mudLightImg, 1],
+	[mudLightImg, 1],
+	[mudLightImg, 1],
+	[mudLightImg, 1],
+	[mudLightImg, 1],
+	[mudLightImg, 1]
+];
+
+const forestBottom = (roadside: HTMLImageElement): BelowRoadDefinition => [
+	[roadside, 1],
 	[smallTreeImg, 1],
 	[treeImg, 2],
 	null,
@@ -82,19 +127,52 @@ const forestBottom: BelowRoadDefinition = [
 	null
 ];
 
-const forestColumn: SceneColumnDefinition = [forestTop, forestBottom];
+const columnsAndDuration: readonly [SceneColumnDefinition, number][] = [
+	[[forestTop(smallTreeImg), forestBottom(grassImg)], 30],
+	[[forestTop(grassImg), forestBottom(grassImg)], 1],
+	[[forestTop(mudLightImg), forestBottom(grassImg)], 3],
+	[[forestTop(grassImg), forestBottom(grassImg)], 1],
+	[[forestTop(smallTreeImg), forestBottom(grassImg)], 2],
+	[[forestTop(smallTreeImg), forestBottom(mudLightImg)], 3],
+	[[forestTop(smallTreeImg), forestBottom(grassImg)], 1],
+	[[forestTop(grassImg), forestBottom(grassImg)], 1],
+	[[forestTop(shrubLightImg), forestBottom(grassImg)], 2],
+	[[forestTop(grassImg), forestBottom(grassImg)], 1],
+	[[forestTop(smallTreeImg), forestBottom(grassImg)], 6],
+	// transition to lake
+	[[forestTop(grassImg), forestBottom(grassImg)], 1],
+	[[forestToLake1, forestBottom(grassImg)], 1],
+	[[forestToLake2, forestBottom(grassImg)], 1],
+	[[forestToLake3, forestBottom(grassImg)], 1],
+	[[forestToLake4, forestBottom(grassImg)], 10]
+];
+
+function getColumn(index: number): SceneColumnDefinition | null {
+	let cumulative = 0;
+	for (let i = 0; i < columnsAndDuration.length; ++i) {
+		cumulative += columnsAndDuration[i][1];
+		if (index < cumulative) return columnsAndDuration[i][0];
+	}
+	return null;
+}
 
 export function drawScene(ctx: CanvasRenderingContext2D, sceneProgress: number) {
-	const offsetToUse = Math.floor(sceneProgress) % 16;
+	const columnOffset = Math.floor(sceneProgress) % 16;
+	const columnIndex = Math.floor(sceneProgress / 16);
+
+	ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
 	ctx.save();
 	ctx.translate(0, -CANVAS_HEIGHT / 2 + 16 * ABOVE_ROAD_ROWS);
 
 	for (let c = -1; c < CANVAS_WIDTH / 16 + 1; c += 1) {
-		ctx.save();
-		ctx.translate(c * 16 - offsetToUse, 0);
-		drawColumn(ctx, forestColumn);
-		ctx.restore();
+		const column = getColumn(columnIndex + c);
+		if (column) {
+			ctx.save();
+			ctx.translate(c * 16 - columnOffset, 0);
+			drawColumn(ctx, column);
+			ctx.restore();
+		}
 	}
 
 	drawCar(ctx, sceneProgress);
