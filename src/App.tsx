@@ -5,7 +5,6 @@ import Logo, { LogoBackground } from 'components/logo';
 import NoiseCanvas from 'components/noise-canvas';
 import DivAutoHideContent from 'components/div-auto-hide-content';
 import background from 'img/stmarylake.jpg';
-import { Counter } from 'features/counter/Counter';
 import styles from 'app.module.scss';
 import glitchStyles from 'glitch.module.scss';
 import DoorScene from 'pages/door-scene';
