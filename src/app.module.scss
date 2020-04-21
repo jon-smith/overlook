@@ -15,6 +15,16 @@
 	font-family: monospace;
 }
 
+@font-face {
+	font-family: 'Champignon';
+	src: local('Champignon'), url(./fonts/Champignon.otf) format('opentype');
+}
+
+.calligraphy {
+	font-family: 'Champignon';
+	font-size: 6em;
+}
+
 .vh1point2 {
 	min-height: 120vh;
 	height: 120vh;
@@ -141,7 +151,14 @@
 	transform: rotate(-45deg);
 }
 
-.overlayNavArrowContainer {
+.overlayArrowContainer {
+	position: absolute;
+	left: 50%;
+	top: 100vh;
+	transform: translate(-50%, -20vh);
+}
+
+.overlayArrowContainerPlus10vh {
 	position: absolute;
 	left: 50%;
 	top: 110vh;

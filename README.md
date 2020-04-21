@@ -47,3 +47,6 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 [Iconify React](https://github.com/iconify/iconify-react) - [MIT](https://opensource.org/licenses/MIT).
 
 [Twemoji (Twitter Emoji)](https://github.com/twitter/twemoji) - [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+
+Champignon Font - Copyright (c) 1999,2010 Claude Pelletier (claudeserieux@gmail.com), with Reserved Font Name "Champignon" = [SIL Open Font License, Version 1.1](http://scripts.sil.org/OFL)
+

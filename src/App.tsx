@@ -65,10 +65,6 @@ const ArrowNav = (props: { clickId: NavID; type: 'up' | 'down' }) => {
 	);
 };
 
-const carpetProps = navDivProps('typewriter');
-const doorSceneProps = navDivProps('bottom');
-const bottomProps = navDivProps('top');
-
 function App() {
 	return (
 		<div className={styles.app}>
@@ -91,20 +87,19 @@ function App() {
 			</Parallax>
 			<Parallax strength={200}>
 				<div className={`${styles.appPage} ${styles.vh1point2}`} id="driving" />
-				<div className={styles.overlayNavArrowContainer}>
-					<ArrowNav clickId="ice-cream" type="down" />
+				<div className={styles.overlayArrowContainerPlus10vh}>
+					<ArrowNav clickId="typewriter" type="down" />
 				</div>
 				<Background className={`${styles.vh1point2}`}>
 					<DrivingSceneFullScreen />
 				</Background>
 			</Parallax>
-			<Parallax strength={400}>
-				<div className={styles.appPage} id="ice-cream">
-					You like ice cream, doc?
-				</div>
-			</Parallax>
 			<Parallax strength={500}>
-				<div className={`${styles.appPage} ${styles.vh1point5}`} id="carpet" {...carpetProps}>
+				<div
+					className={`${styles.appPage} ${styles.vh1point5}`}
+					id="carpet"
+					{...navDivProps('typewriter')}
+				>
 					<GradySisters />
 				</div>
 				<Background className={styles.vh2}>
@@ -114,6 +109,9 @@ function App() {
 			<Parallax strength={400}>
 				<div className={styles.appPage} id="typewriter">
 					<Typewriter />
+				</div>
+				<div className={styles.overlayArrowContainer}>
+					<ArrowNav clickId="door-scene" type="down" />
 				</div>
 			</Parallax>
 			<Parallax
@@ -125,20 +123,14 @@ function App() {
 						<DivAutoHideContent className={`${styles.appPage} ${styles.vh4}`} id="door-scene">
 							<DoorScene percentage={convertDoorScenePercentage(percentage)} />
 						</DivAutoHideContent>
-						<div
-							className={`${styles.appPage} ${styles.vh4} ${styles.vignette}`}
-							{...doorSceneProps}
-						/>
+						<div className={`${styles.appPage} ${styles.vh4} ${styles.vignette}`} />
 					</>
 				)}
 			/>
-			<Parallax strength={200}>
-				<div className={styles.appPage} id="bottom" {...bottomProps}>
-					Redux example
-					<Counter />
-					<ArrowNav clickId="driving" type="up" />
-				</div>
-			</Parallax>
+			<div className={styles.appPage}>
+				<span className={styles.calligraphy}>fin</span>
+				<ArrowNav clickId="top" type="up" />
+			</div>
 		</div>
 	);
 }
