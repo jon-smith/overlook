@@ -77,8 +77,8 @@ function App() {
 				<div className={styles.appPage} id="top">
 					<Logo />
 					WELCOME TO THE
-					<div className={glitchStyles.glitch} data-text="OVERLOOK">
-						OVERLOOK
+					<div className={glitchStyles.glitch} data-text="Overlook">
+						Overlook
 					</div>
 					HOTEL
 					<ArrowNav clickId="driving" type="down" />
