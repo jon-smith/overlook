@@ -40,7 +40,7 @@ const scrollToId = (id: string) => {
 	if (anchor) anchor.scrollIntoView({ behavior: 'smooth', block: 'end' });
 };
 
-type NavID = 'top' | 'driving' | 'door-scene' | 'typewriter' | 'bottom' | 'carpet' | 'ice-cream';
+type NavID = 'top' | 'driving' | 'typewriter' | 'door-scene' | 'bottom';
 
 const navDivProps = (clickId: NavID) => {
 	return {
