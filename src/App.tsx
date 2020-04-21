@@ -91,8 +91,8 @@ function App() {
 				</div>
 			</Parallax>
 			<Parallax strength={200}>
-				<div className={`${styles.appPage}`} id="driving" {...drivingProps} />
-				<Background className={`${styles.vh1point5}`}>
+				<div className={`${styles.appPage} ${styles.vh1point3}`} id="driving" {...drivingProps} />
+				<Background className={`${styles.vh1point3}`}>
 					<DrivingSceneFullScreen />
 				</Background>
 			</Parallax>

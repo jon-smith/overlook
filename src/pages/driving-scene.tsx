@@ -7,6 +7,7 @@ import carSprite1 from 'img/sprites/yellow_car_1_32x16.png';
 import carSprite2 from 'img/sprites/yellow_car_2_32x16.png';
 import useInterval from 'hooks/use-interval';
 import useStateWithTime from 'hooks/use-state-with-time';
+import { FixedLengthArray } from 'utils/array-utils';
 
 const imgFromSource = (src: string) => {
 	const img = new Image();
@@ -20,6 +21,52 @@ const grassImg = imgFromSource(grassTile);
 const roadImg = imgFromSource(roadTile);
 const carImg1 = imgFromSource(carSprite1);
 const carImg2 = imgFromSource(carSprite2);
+
+const BLANK_ROWS = 6;
+const CONTENT_ROWS = 18;
+const TOTAL_ROWS = BLANK_ROWS + CONTENT_ROWS;
+const CANVAS_WIDTH = 500;
+const CANVAS_HEIGHT = TOTAL_ROWS * 16;
+type SceneColumnDefinition = FixedLengthArray<
+	[HTMLImageElement, number] | null,
+	typeof CONTENT_ROWS
+>;
+
+function drawColumn(ctx: CanvasRenderingContext2D, def: SceneColumnDefinition) {
+	const drawCell = (img: CanvasImageSource, row: number, imgDim: [number, number]) => {
+		const y = (row + BLANK_ROWS) * 16;
+		ctx.drawImage(img, 0, y, imgDim[0], imgDim[1]);
+	};
+	def.forEach((cell, i) => {
+		if (cell) drawCell(cell[0], i, [16, cell[1] * 16]);
+	});
+}
+
+function drawCar(ctx: CanvasRenderingContext2D, sceneProgress: number) {
+	const carImg = Math.floor(sceneProgress % 8) > 4 ? carImg1 : carImg2;
+	ctx.drawImage(carImg, CANVAS_WIDTH / 2 - 8, (BLANK_ROWS + 9) * 16, 32, 16);
+}
+
+const forestColumn: SceneColumnDefinition = [
+	[treeImg, 2],
+	null,
+	[treeImg, 2],
+	null,
+	[treeImg, 2],
+	null,
+	[treeImg, 2],
+	null,
+	[smallTreeImg, 1],
+	[roadImg, 1],
+	[grassImg, 1],
+	[smallTreeImg, 1],
+	[treeImg, 2],
+	null,
+	[treeImg, 2],
+	null,
+	[treeImg, 2],
+	null
+];
 
 const elementIsWithinYRange = (element: Element) => {
 	const { top, bottom } = element.getBoundingClientRect();
@@ -52,9 +99,6 @@ interface Props {
 	style?: React.CSSProperties;
 }
 
-const CANVAS_WIDTH = 500;
-const CANVAS_HEIGHT = 300;
-
 const LEFT_ARROW = 37;
 const RIGHT_ARROW = 39;
 const SPACE_BAR = 32;
@@ -64,7 +108,7 @@ const DrivingScene = (props: Props) => {
 
 	const [moving, setMoving] = useState(true);
 	const [speed, setSpeed] = useState(10); // pixels per second
-	const [offset, setOffset, setOffsetTime] = useStateWithTime(0, false);
+	const [sceneProgress, setSceneProgress, setProgressTime] = useStateWithTime(0, false);
 
 	useWindowKeyDown((e: KeyboardEvent) => {
 		if (canvasRef.current && elementIsWithinYRange(canvasRef.current)) {
@@ -86,50 +130,31 @@ const DrivingScene = (props: Props) => {
 		if (canvasRef.current) {
 			const ctx = canvasRef.current.getContext('2d');
 			if (ctx) {
-				const offsetToUse = parseFloat((offset % 16).toFixed(0));
+				const offsetToUse = Math.floor(sceneProgress) % 16;
 
-				const drawRow = (
-					img: CanvasImageSource,
-					rIndex: number,
-					nRows: number,
-					imgDim: [number, number]
-				) => {
-					const startRow = rIndex * 16;
-					const toRow = startRow + nRows * imgDim[1];
-					for (let r = startRow; r < toRow; r += imgDim[1]) {
-						for (let c = -16; c < CANVAS_WIDTH + 16; c += imgDim[0]) {
-							ctx.drawImage(img, c - offsetToUse, r, imgDim[0], imgDim[1]);
-						}
-					}
-					return toRow / 16;
-				};
+				for (let c = -1; c < CANVAS_WIDTH / 16 + 1; c += 1) {
+					ctx.save();
+					ctx.translate(c * 16 - offsetToUse, 0);
+					drawColumn(ctx, forestColumn);
+					ctx.restore();
+				}
 
-				let nextRow = drawRow(treeImg, 0, 4, [16, 32]);
-				nextRow = drawRow(smallTreeImg, nextRow, 1, [16, 16]);
-
-				const roadRow = nextRow;
-				nextRow = drawRow(roadImg, nextRow, 1, [16, 16]);
-				nextRow = drawRow(grassImg, nextRow, 1, [16, 16]);
-				nextRow = drawRow(smallTreeImg, nextRow, 1, [16, 16]);
-				drawRow(treeImg, nextRow, 3, [16, 32]);
-
-				const carImg = offsetToUse % 8 > 4 ? carImg1 : carImg2;
-				ctx.drawImage(carImg, CANVAS_WIDTH / 2, roadRow * 16, 32, 16);
+				drawCar(ctx, sceneProgress);
 			}
 		}
-	}, [offset]);
+	}, [sceneProgress]);
 
 	useInterval(() => {
 		if (!moving) {
-			// Event if not moving, set the time so we update the time
-			setOffset(offset);
+			// Even if not moving, set the time so we update the time
+			setSceneProgress(sceneProgress);
 			return;
 		}
 
-		const sinceLast = Date.now() - setOffsetTime;
+		const sinceLast = Date.now() - setProgressTime;
 		const speedToUse = clamp(speed, [5, 100]);
 		const distance = speedToUse * sinceLast * 0.001;
-		setOffset(offset + distance);
+		setSceneProgress(sceneProgress + distance);
 	}, 1000 / 25);
 
 	return (
