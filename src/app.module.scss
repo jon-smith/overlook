@@ -15,9 +15,9 @@
 	font-family: monospace;
 }
 
-.vh1point3 {
-	min-height: 130vh;
-	height: 130vh;
+.vh1point2 {
+	min-height: 120vh;
+	height: 120vh;
 	width: 100vw;
 }
 
@@ -139,6 +139,13 @@
 .arrowDown {
 	@include arrowBase;
 	transform: rotate(-45deg);
+}
+
+.overlayNavArrowContainer {
+	position: absolute;
+	left: 50%;
+	top: 110vh;
+	transform: translate(-50%, -20vh);
 }
 
 .fadeIn {

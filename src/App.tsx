@@ -90,18 +90,11 @@ function App() {
 				</div>
 			</Parallax>
 			<Parallax strength={200}>
-				<div className={`${styles.appPage} ${styles.vh1point3}`} id="driving" />
-				<div
-					style={{
-						position: 'absolute',
-						left: '50%',
-						top: '100vh',
-						transform: 'translate(-50%, -20vh)'
-					}}
-				>
+				<div className={`${styles.appPage} ${styles.vh1point2}`} id="driving" />
+				<div className={styles.overlayNavArrowContainer}>
 					<ArrowNav clickId="ice-cream" type="down" />
 				</div>
-				<Background className={`${styles.vh1point3}`}>
+				<Background className={`${styles.vh1point2}`}>
 					<DrivingSceneFullScreen />
 				</Background>
 			</Parallax>

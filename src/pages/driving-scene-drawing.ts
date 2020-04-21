@@ -162,9 +162,6 @@ export function drawScene(ctx: CanvasRenderingContext2D, sceneProgress: number) 
 
 	ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
-	ctx.save();
-	ctx.translate(0, -CANVAS_HEIGHT / 2 + 16 * ABOVE_ROAD_ROWS);
-
 	for (let c = -1; c < CANVAS_WIDTH / 16 + 1; c += 1) {
 		const column = getColumn(columnIndex + c);
 		if (column) {
@@ -176,5 +173,4 @@ export function drawScene(ctx: CanvasRenderingContext2D, sceneProgress: number) 
 	}
 
 	drawCar(ctx, sceneProgress);
-	ctx.restore();
 }
