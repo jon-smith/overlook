@@ -1,72 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
-import bigTreeTile from 'img/tiles/tree_16x32.png';
-import smallTreeTile from 'img/tiles/tree_16x16.png';
-import grassTile from 'img/tiles/grass_16x16.png';
-import roadTile from 'img/tiles/road_mark_16x16.png';
-import carSprite1 from 'img/sprites/yellow_car_1_32x16.png';
-import carSprite2 from 'img/sprites/yellow_car_2_32x16.png';
 import useInterval from 'hooks/use-interval';
 import useStateWithTime from 'hooks/use-state-with-time';
-import { FixedLengthArray } from 'utils/array-utils';
-
-const imgFromSource = (src: string) => {
-	const img = new Image();
-	img.src = src;
-	return img;
-};
-
-const treeImg = imgFromSource(bigTreeTile);
-const smallTreeImg = imgFromSource(smallTreeTile);
-const grassImg = imgFromSource(grassTile);
-const roadImg = imgFromSource(roadTile);
-const carImg1 = imgFromSource(carSprite1);
-const carImg2 = imgFromSource(carSprite2);
-
-const BLANK_ROWS = 6;
-const CONTENT_ROWS = 18;
-const TOTAL_ROWS = BLANK_ROWS + CONTENT_ROWS;
-const CANVAS_WIDTH = 500;
-const CANVAS_HEIGHT = TOTAL_ROWS * 16;
-type SceneColumnDefinition = FixedLengthArray<
-	[HTMLImageElement, number] | null,
-	typeof CONTENT_ROWS
->;
-
-function drawColumn(ctx: CanvasRenderingContext2D, def: SceneColumnDefinition) {
-	const drawCell = (img: CanvasImageSource, row: number, imgDim: [number, number]) => {
-		const y = (row + BLANK_ROWS) * 16;
-		ctx.drawImage(img, 0, y, imgDim[0], imgDim[1]);
-	};
-	def.forEach((cell, i) => {
-		if (cell) drawCell(cell[0], i, [16, cell[1] * 16]);
-	});
-}
-
-function drawCar(ctx: CanvasRenderingContext2D, sceneProgress: number) {
-	const carImg = Math.floor(sceneProgress % 8) > 4 ? carImg1 : carImg2;
-	ctx.drawImage(carImg, CANVAS_WIDTH / 2 - 8, (BLANK_ROWS + 9) * 16, 32, 16);
-}
-
-const forestColumn: SceneColumnDefinition = [
-	[treeImg, 2],
-	null,
-	[treeImg, 2],
-	null,
-	[treeImg, 2],
-	null,
-	[treeImg, 2],
-	null,
-	[smallTreeImg, 1],
-	[roadImg, 1],
-	[grassImg, 1],
-	[smallTreeImg, 1],
-	[treeImg, 2],
-	null,
-	[treeImg, 2],
-	null,
-	[treeImg, 2],
-	null
-];
+import { CANVAS_HEIGHT, CANVAS_WIDTH, drawScene } from './driving-scene-drawing';
 
 const elementIsWithinYRange = (element: Element) => {
 	const { top, bottom } = element.getBoundingClientRect();
@@ -130,16 +65,7 @@ const DrivingScene = (props: Props) => {
 		if (canvasRef.current) {
 			const ctx = canvasRef.current.getContext('2d');
 			if (ctx) {
-				const offsetToUse = Math.floor(sceneProgress) % 16;
-
-				for (let c = -1; c < CANVAS_WIDTH / 16 + 1; c += 1) {
-					ctx.save();
-					ctx.translate(c * 16 - offsetToUse, 0);
-					drawColumn(ctx, forestColumn);
-					ctx.restore();
-				}
-
-				drawCar(ctx, sceneProgress);
+				drawScene(ctx, sceneProgress);
 			}
 		}
 	}, [sceneProgress]);
