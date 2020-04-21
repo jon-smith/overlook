@@ -42,7 +42,7 @@ const DrivingScene = (props: Props) => {
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 
 	const [moving, setMoving] = useState(true);
-	const [speed, setSpeed] = useState(10); // pixels per second
+	const [speed, setSpeed] = useState(20); // pixels per second
 	const [sceneProgress, setSceneProgress, setProgressTime] = useStateWithTime(0, false);
 
 	useWindowKeyDown((e: KeyboardEvent) => {

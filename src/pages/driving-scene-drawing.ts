@@ -7,6 +7,9 @@ import roadTile from 'img/tiles/road_mark_16x16.png';
 import waterTile from 'img/tiles/water_16x16.png';
 import waterLeftEdgeTile from 'img/tiles/water_edge_left_16x16.png';
 import waterRightEdgeTile from 'img/tiles/water_edge_right_16x16.png';
+import waterTopEdgeTile from 'img/tiles/water_edge_top_16x16.png';
+import waterTopRightEdgeTile from 'img/tiles/water_edge_top_right_16x16.png';
+import waterTopLeftEdgeTile from 'img/tiles/water_edge_top_left_16x16.png';
 import carSprite1 from 'img/sprites/yellow_car_1_32x16.png';
 import carSprite2 from 'img/sprites/yellow_car_2_32x16.png';
 import { FixedLengthArray } from 'utils/array-utils';
@@ -25,6 +28,9 @@ const shrubLightImg = imgFromSource(shrubLightTile);
 const waterImg = imgFromSource(waterTile);
 const waterLeftEdgeImg = imgFromSource(waterLeftEdgeTile);
 const waterRightImg = imgFromSource(waterRightEdgeTile);
+const waterTopEdgeImg = imgFromSource(waterTopEdgeTile);
+const waterTopRightEdgeImg = imgFromSource(waterTopRightEdgeTile);
+const waterTopLeftEdgeImg = imgFromSource(waterTopLeftEdgeTile);
 const roadImg = imgFromSource(roadTile);
 const carImg1 = imgFromSource(carSprite1);
 const carImg2 = imgFromSource(carSprite2);
@@ -122,21 +128,40 @@ const forestToLake4: AboveRoadDefinition = [
 	[mudLightImg, 1]
 ];
 
-const lakeTop = (cutout: HTMLImageElement): AboveRoadDefinition => [
+const lakeTop = (cutout?: HTMLImageElement): AboveRoadDefinition => [
 	[waterImg, 1],
 	[waterImg, 1],
 	[waterImg, 1],
 	[waterImg, 1],
-	[cutout, 1],
+	[cutout ?? mudLightImg, 1],
 	[mudLightImg, 1],
 	[mudLightImg, 1],
 	[mudLightImg, 1],
 	[mudLightImg, 1]
 ];
 
-const forestBottom = (roadside: HTMLImageElement): BelowRoadDefinition => [
+const lakeTopMountain = (edge1: HTMLImageElement, edge2: HTMLImageElement): AboveRoadDefinition => [
+	[edge1, 1],
+	[edge2, 1],
+	[waterImg, 1],
+	[waterImg, 1],
+	[mudLightImg, 1],
+	[mudLightImg, 1],
+	[mudLightImg, 1],
+	[mudLightImg, 1],
+	[mudLightImg, 1]
+];
+
+const lakeTopMountainLeft = lakeTopMountain(waterRightImg, waterTopRightEdgeImg);
+const lakeTopMountainMid = lakeTopMountain(mudLightImg, waterTopEdgeImg);
+const lakeTopMountainRight = lakeTopMountain(waterLeftEdgeImg, waterTopLeftEdgeImg);
+
+const forestBottom = (
+	roadside: HTMLImageElement,
+	roadside2?: HTMLImageElement
+): BelowRoadDefinition => [
 	[roadside, 1],
-	[smallTreeImg, 1],
+	[roadside2 ?? smallTreeImg, 1],
 	[treeImg, 2],
 	null,
 	[treeImg, 2],
@@ -164,11 +189,16 @@ const columnsAndDuration: readonly [SceneColumnDefinition, number][] = [
 	[[forestToLake3, forestBottom(grassImg)], 1],
 	[[forestToLake4, forestBottom(grassImg)], 1],
 	// Lake top
-	[[lakeTop(mudLightImg), forestBottom(grassImg)], 5],
+	[[lakeTop(), forestBottom(grassImg)], 5],
 	[[lakeTop(waterLeftEdgeImg), forestBottom(grassImg)], 1],
 	[[lakeTop(waterImg), forestBottom(grassImg)], 3],
-	[[lakeTop(waterRightImg), forestBottom(grassImg)], 1],
-	[[lakeTop(mudLightImg), forestBottom(grassImg)], 5]
+	[[lakeTop(waterRightImg), forestBottom(mudLightImg)], 1],
+	[[lakeTop(), forestBottom(mudLightImg)], 5],
+	[[lakeTop(), forestBottom(mudLightImg, mudLightImg)], 5],
+	[[lakeTopMountainLeft, forestBottom(mudLightImg, mudLightImg)], 1],
+	[[lakeTopMountainMid, forestBottom(mudLightImg, mudLightImg)], 4],
+	[[lakeTopMountainRight, forestBottom(mudLightImg, mudLightImg)], 1],
+	[[lakeTop(), forestBottom(mudLightImg, mudLightImg)], 5]
 ];
 
 function getColumn(index: number): SceneColumnDefinition | null {
