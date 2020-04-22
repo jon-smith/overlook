@@ -35,7 +35,7 @@ const roadImg = imgFromSource(roadTile);
 const carImg1 = imgFromSource(carSprite1);
 const carImg2 = imgFromSource(carSprite2);
 
-const BLANK_ROWS = 6; // This needs to be tuned for the current parallax settings to get the canvas into the centre
+const BLANK_ROWS = 4; // This needs to be tuned for the current parallax settings to get the canvas into the centre
 const ABOVE_ROAD_ROWS = 9;
 const BELOW_ROAD_ROWS = 8;
 export const CANVAS_WIDTH = 600;
