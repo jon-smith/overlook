@@ -31,7 +31,7 @@ const mudLightImg = imgFromSource(mudLightTile);
 const shrubLightImg = imgFromSource(shrubLightTile);
 const waterImg = imgFromSource(waterTile);
 const waterLeftEdgeImg = imgFromSource(waterLeftEdgeTile);
-const waterRightImg = imgFromSource(waterRightEdgeTile);
+const waterRightEdgeImg = imgFromSource(waterRightEdgeTile);
 const waterTopEdgeImg = imgFromSource(waterTopEdgeTile);
 const waterTopRightEdgeImg = imgFromSource(waterTopRightEdgeTile);
 const waterTopLeftEdgeImg = imgFromSource(waterTopLeftEdgeTile);
@@ -148,6 +148,24 @@ const lakeTop = (cutout?: HTMLImageElement): AboveRoadDefinition => [
 	[mudLightImg, 1]
 ];
 
+const getLakeTopTransitionCell = (cell: number, nGround: number, nEdges: number) => {
+	if (nGround > cell) return mudLightImg;
+	const offsetCell = cell - nGround;
+	return nEdges > offsetCell ? waterRightEdgeImg : waterImg;
+};
+
+const lakeTopTransition = (nGround: number, nEdges: number): AboveRoadDefinition => [
+	[getLakeTopTransitionCell(3, nGround, nEdges), 1],
+	[getLakeTopTransitionCell(2, nGround, nEdges), 1],
+	[getLakeTopTransitionCell(1, nGround, nEdges), 1],
+	[getLakeTopTransitionCell(0, nGround, nEdges), 1],
+	[mudLightImg, 1],
+	[mudLightImg, 1],
+	[mudLightImg, 1],
+	[mudLightImg, 1],
+	[mudLightImg, 1]
+];
+
 const lakeTopMountain = (edge1: HTMLImageElement, edge2: HTMLImageElement): AboveRoadDefinition => [
 	[edge1, 1],
 	[edge2, 1],
@@ -160,7 +178,7 @@ const lakeTopMountain = (edge1: HTMLImageElement, edge2: HTMLImageElement): Abov
 	[mudLightImg, 1]
 ];
 
-const lakeTopMountainLeft = lakeTopMountain(waterRightImg, waterTopRightEdgeImg);
+const lakeTopMountainLeft = lakeTopMountain(waterRightEdgeImg, waterTopRightEdgeImg);
 const lakeTopMountainMid = lakeTopMountain(mudLightImg, waterTopEdgeImg);
 const lakeTopMountainRight = lakeTopMountain(waterLeftEdgeImg, waterTopLeftEdgeImg);
 
@@ -178,15 +196,31 @@ const forestBottom = (
 	null
 ];
 
+const getWinterBottomTransitionCell = (
+	cell: number,
+	stage: number
+): [HTMLImageElement, number] | null => {
+	const imgForCell = (c: number) => {
+		const offsetCell = c - 1;
+		if (offsetCell < stage) return snowBoulderImg;
+		if (stage % 2 === 0 && offsetCell === stage) return smallTreeImg;
+		return treeImg;
+	};
+	// If the cell above is a large tree, this cell is null
+	if (cell % 2 !== 0 && imgForCell(cell - 1) === treeImg) return null;
+	const thisCellImg = imgForCell(cell);
+	return [thisCellImg, thisCellImg === treeImg ? 2 : 1];
+};
+
 const winterBottomTransition = (stage: number): BelowRoadDefinition => [
 	[snowBoulderImg, 1],
-	[stage > 0 ? snowBoulderImg : smallTreeImg, 1],
-	[stage > 1 ? snowBoulderImg : smallTreeImg, 1],
-	[stage > 2 ? snowBoulderImg : smallTreeImg, 1],
-	[stage > 3 ? snowBoulderImg : smallTreeImg, 1],
-	[stage > 4 ? snowBoulderImg : smallTreeImg, 1],
-	[stage > 5 ? snowBoulderImg : smallTreeImg, 1],
-	[stage > 6 ? snowBoulderImg : smallTreeImg, 1]
+	getWinterBottomTransitionCell(1, stage),
+	getWinterBottomTransitionCell(2, stage),
+	getWinterBottomTransitionCell(3, stage),
+	getWinterBottomTransitionCell(4, stage),
+	getWinterBottomTransitionCell(5, stage),
+	getWinterBottomTransitionCell(6, stage),
+	getWinterBottomTransitionCell(7, stage)
 ];
 
 const winterBottom: BelowRoadDefinition = [
@@ -222,20 +256,23 @@ const columnsAndDuration: readonly [SceneColumnDefinition, number][] = [
 	[[lakeTop(), forestBottom(grassImg)], 5],
 	[[lakeTop(waterLeftEdgeImg), forestBottom(grassImg)], 1],
 	[[lakeTop(waterImg), forestBottom(grassImg)], 3],
-	[[lakeTop(waterRightImg), forestBottom(mudLightImg)], 1],
+	[[lakeTop(waterRightEdgeImg), forestBottom(mudLightImg)], 1],
 	[[lakeTop(), forestBottom(mudLightImg)], 5],
 	[[lakeTop(), forestBottom(mudLightImg, mudLightImg)], 5],
 	[[lakeTopMountainLeft, forestBottom(mudLightImg, mudLightImg)], 1],
 	[[lakeTopMountainMid, forestBottom(mudLightImg, mudLightImg)], 4],
 	[[lakeTopMountainRight, forestBottom(mudLightImg, mudLightImg)], 1],
-	[[lakeTop(), forestBottom(mudLightImg, mudLightImg)], 4],
-	[[lakeTop(), forestBottom(mudLightImg, smallTreeImg)], 1],
-	[[lakeTop(), winterBottomTransition(0)], 1],
-	[[lakeTop(), winterBottomTransition(1)], 1],
-	[[lakeTop(), winterBottomTransition(2)], 1],
-	[[lakeTop(), winterBottomTransition(3)], 1],
-	[[lakeTop(), winterBottomTransition(4)], 1],
-	[[lakeTop(), winterBottom], 3]
+	[[lakeTop(), forestBottom(mudLightImg, mudLightImg)], 2],
+	[[lakeTopTransition(0, 2), forestBottom(mudLightImg, mudLightImg)], 1],
+	[[lakeTopTransition(2, 0), forestBottom(mudLightImg, mudLightImg)], 1],
+	[[lakeTopTransition(2, 1), forestBottom(mudLightImg, mudLightImg)], 1],
+	[[lakeTopTransition(3, 1), forestBottom(mudLightImg, smallTreeImg)], 1],
+	[[lakeTopTransition(4, 0), winterBottomTransition(0)], 1],
+	[[lakeTopTransition(4, 0), winterBottomTransition(1)], 1],
+	[[lakeTopTransition(4, 0), winterBottomTransition(3)], 1],
+	[[lakeTopTransition(4, 0), winterBottomTransition(3)], 1],
+	[[lakeTopTransition(4, 0), winterBottomTransition(4)], 1],
+	[[lakeTopTransition(4, 0), winterBottom], 3]
 ];
 
 function getColumn(index: number): SceneColumnDefinition | null {
