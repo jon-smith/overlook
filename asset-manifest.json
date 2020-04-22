@@ -1,0 +1,26 @@
+{
+  "files": {
+    "main.css": "/overlook/static/css/main.5cd1df4e.chunk.css",
+    "main.js": "/overlook/static/js/main.be6c1079.chunk.js",
+    "main.js.map": "/overlook/static/js/main.be6c1079.chunk.js.map",
+    "runtime-main.js": "/overlook/static/js/runtime-main.c35f5631.js",
+    "runtime-main.js.map": "/overlook/static/js/runtime-main.c35f5631.js.map",
+    "static/js/2.b843b76f.chunk.js": "/overlook/static/js/2.b843b76f.chunk.js",
+    "static/js/2.b843b76f.chunk.js.map": "/overlook/static/js/2.b843b76f.chunk.js.map",
+    "index.html": "/overlook/index.html",
+    "precache-manifest.a1305409b0b892f9e19e62ad29023df5.js": "/overlook/precache-manifest.a1305409b0b892f9e19e62ad29023df5.js",
+    "service-worker.js": "/overlook/service-worker.js",
+    "static/css/main.5cd1df4e.chunk.css.map": "/overlook/static/css/main.5cd1df4e.chunk.css.map",
+    "static/js/2.b843b76f.chunk.js.LICENSE.txt": "/overlook/static/js/2.b843b76f.chunk.js.LICENSE.txt",
+    "static/media/app.module.scss": "/overlook/static/media/Champignon.a5ae05b6.otf",
+    "static/media/stmarylake.jpg": "/overlook/static/media/stmarylake.b2970c56.jpg",
+    "static/media/yellow_car_1_32x16.png": "/overlook/static/media/yellow_car_1_32x16.165b4b46.png",
+    "static/media/yellow_car_2_32x16.png": "/overlook/static/media/yellow_car_2_32x16.fc2bd6f8.png"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.c35f5631.js",
+    "static/js/2.b843b76f.chunk.js",
+    "static/css/main.5cd1df4e.chunk.css",
+    "static/js/main.be6c1079.chunk.js"
+  ]
+}
