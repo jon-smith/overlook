@@ -38,6 +38,16 @@ const LEFT_ARROW = 37;
 const RIGHT_ARROW = 39;
 const SPACE_BAR = 32;
 
+const convertNumberKeyCodeToNumber = (keyCode: number): number | null => {
+	// 0-9 keys
+	if (keyCode >= 48 && keyCode <= 57) return keyCode - 48;
+
+	// Numpad
+	if (keyCode >= 96 && keyCode <= 105) return keyCode - 96;
+
+	return null;
+};
+
 const DrivingScene = (props: Props) => {
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -56,6 +66,11 @@ const DrivingScene = (props: Props) => {
 				if (e.target === document.body) {
 					setMoving(!moving);
 					e.preventDefault();
+				}
+			} else {
+				const number = convertNumberKeyCodeToNumber(keyCode);
+				if (number !== null) {
+					setSceneProgress(number * 20 * 16);
 				}
 			}
 		}

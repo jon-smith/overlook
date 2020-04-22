@@ -10,6 +10,10 @@ import waterRightEdgeTile from 'img/tiles/water_edge_right_16x16.png';
 import waterTopEdgeTile from 'img/tiles/water_edge_top_16x16.png';
 import waterTopRightEdgeTile from 'img/tiles/water_edge_top_right_16x16.png';
 import waterTopLeftEdgeTile from 'img/tiles/water_edge_top_left_16x16.png';
+import snowBoulderTile from 'img/tiles/snow_boulder_16x16.png';
+import snowGroundTile from 'img/tiles/snow_ground_16x16.png';
+import snowGroundRocksTile from 'img/tiles/snow_ground_rocks_16x16.png';
+import snowGrassTile from 'img/tiles/snow_grass_16x16.png';
 import carSprite1 from 'img/sprites/yellow_car_1_32x16.png';
 import carSprite2 from 'img/sprites/yellow_car_2_32x16.png';
 import { FixedLengthArray } from 'utils/array-utils';
@@ -32,6 +36,10 @@ const waterTopEdgeImg = imgFromSource(waterTopEdgeTile);
 const waterTopRightEdgeImg = imgFromSource(waterTopRightEdgeTile);
 const waterTopLeftEdgeImg = imgFromSource(waterTopLeftEdgeTile);
 const roadImg = imgFromSource(roadTile);
+const snowBoulderImg = imgFromSource(snowBoulderTile);
+const snowGroundImg = imgFromSource(snowGroundTile);
+const snowGroundRocksImg = imgFromSource(snowGroundRocksTile);
+const snowGrassImg = imgFromSource(snowGrassTile);
 const carImg1 = imgFromSource(carSprite1);
 const carImg2 = imgFromSource(carSprite2);
 
@@ -170,6 +178,28 @@ const forestBottom = (
 	null
 ];
 
+const winterBottomTransition = (stage: number): BelowRoadDefinition => [
+	[snowBoulderImg, 1],
+	[stage > 0 ? snowBoulderImg : smallTreeImg, 1],
+	[stage > 1 ? snowBoulderImg : smallTreeImg, 1],
+	[stage > 2 ? snowBoulderImg : smallTreeImg, 1],
+	[stage > 3 ? snowBoulderImg : smallTreeImg, 1],
+	[stage > 4 ? snowBoulderImg : smallTreeImg, 1],
+	[stage > 5 ? snowBoulderImg : smallTreeImg, 1],
+	[stage > 6 ? snowBoulderImg : smallTreeImg, 1]
+];
+
+const winterBottom: BelowRoadDefinition = [
+	[snowGroundImg, 1],
+	[snowGroundImg, 1],
+	[snowGroundImg, 1],
+	[snowGroundImg, 1],
+	[snowGroundRocksImg, 1],
+	[snowGroundRocksImg, 1],
+	[snowGroundRocksImg, 1],
+	[snowGroundRocksImg, 1]
+];
+
 const columnsAndDuration: readonly [SceneColumnDefinition, number][] = [
 	[[forestTop(smallTreeImg), forestBottom(grassImg)], 30],
 	[[forestTop(grassImg), forestBottom(grassImg)], 1],
@@ -198,7 +228,14 @@ const columnsAndDuration: readonly [SceneColumnDefinition, number][] = [
 	[[lakeTopMountainLeft, forestBottom(mudLightImg, mudLightImg)], 1],
 	[[lakeTopMountainMid, forestBottom(mudLightImg, mudLightImg)], 4],
 	[[lakeTopMountainRight, forestBottom(mudLightImg, mudLightImg)], 1],
-	[[lakeTop(), forestBottom(mudLightImg, mudLightImg)], 5]
+	[[lakeTop(), forestBottom(mudLightImg, mudLightImg)], 4],
+	[[lakeTop(), forestBottom(mudLightImg, smallTreeImg)], 1],
+	[[lakeTop(), winterBottomTransition(0)], 1],
+	[[lakeTop(), winterBottomTransition(1)], 1],
+	[[lakeTop(), winterBottomTransition(2)], 1],
+	[[lakeTop(), winterBottomTransition(3)], 1],
+	[[lakeTop(), winterBottomTransition(4)], 1],
+	[[lakeTop(), winterBottom], 3]
 ];
 
 function getColumn(index: number): SceneColumnDefinition | null {
