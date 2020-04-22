@@ -49,25 +49,14 @@ const navDivProps = (clickId: NavID) => {
 	};
 };
 
-const ArrowNav = (props: { clickId: NavID; type: 'up' | 'down' }) => {
-	const [fadeIn, setFadeIn] = useState(false);
-	const arrowName = props.type === 'up' ? styles.arrowUp : styles.arrowDown;
-	const className = `${arrowName} ${fadeIn ? styles.fadeIn2s : ''}`;
-	return (
-		<DivWithOnYScrollEnter
-			className={className}
-			scrollFps={100}
-			onEnterYRange={() => setFadeIn(true)}
-			onLeaveYRange={() => setFadeIn(false)}
-			{...navDivProps(props.clickId)}
-		/>
-	);
-};
+const fadeStyle = (long: boolean) => (long ? styles.fadeIn3s : styles.fadeIn2s);
 
-const FadeInDiv = (props: React.PropsWithChildren<React.ComponentProps<'div'>>) => {
-	const { children, className, ...rest } = props;
+const FadeInDiv = (
+	props: React.PropsWithChildren<{ longFade: boolean } & React.ComponentProps<'div'>>
+) => {
+	const { longFade, children, className, ...rest } = props;
 	const [fadeIn, setFadeIn] = useState(false);
-	const classNameToUse = `${className} ${fadeIn ? styles.fadeIn3s : ''}`;
+	const classNameToUse = `${className} ${fadeIn ? fadeStyle(longFade) : ''}`;
 	return (
 		<DivWithOnYScrollEnter
 			className={classNameToUse}
@@ -79,6 +68,11 @@ const FadeInDiv = (props: React.PropsWithChildren<React.ComponentProps<'div'>>) 
 			{children}
 		</DivWithOnYScrollEnter>
 	);
+};
+
+const ArrowNav = (props: { clickId: NavID; type: 'up' | 'down' }) => {
+	const arrowName = props.type === 'up' ? styles.arrowUp : styles.arrowDown;
+	return <FadeInDiv className={arrowName} longFade={false} {...navDivProps(props.clickId)} />;
 };
 
 function App() {
@@ -146,7 +140,7 @@ function App() {
 			<div className={styles.appPage}>
 				<span className={styles.calligraphy}>fin</span>
 				<ArrowNav clickId="top" type="up" />
-				<FadeInDiv className={styles.siteUpdateText}>
+				<FadeInDiv className={styles.siteUpdateText} longFade={true}>
 					<span>Site last updated July 4th 1921</span>
 				</FadeInDiv>
 			</div>
