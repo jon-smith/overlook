@@ -139,10 +139,11 @@ function App() {
 			/>
 			<div className={styles.appPage}>
 				<span className={styles.calligraphy}>fin</span>
-				<ArrowNav clickId="top" type="up" />
+
 				<FadeInDiv className={styles.siteUpdateText} longFade={true}>
 					<span>Site last updated July 4th 1921</span>
 				</FadeInDiv>
+				<ArrowNav clickId="top" type="up" />
 			</div>
 		</div>
 	);
