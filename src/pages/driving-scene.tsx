@@ -70,7 +70,7 @@ const DrivingScene = (props: Props) => {
 			} else {
 				const number = convertNumberKeyCodeToNumber(keyCode);
 				if (number !== null) {
-					setSceneProgress(number * 20 * 16);
+					setSceneProgress(number * 24 * 16);
 				}
 			}
 		}
