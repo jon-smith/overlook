@@ -80,7 +80,7 @@ const DrivingScene = (props: Props) => {
 		if (canvasRef.current) {
 			const ctx = canvasRef.current.getContext('2d');
 			if (ctx) {
-				drawScene(ctx, sceneProgress);
+				drawScene(ctx, Math.min(1620, sceneProgress));
 			}
 		}
 	}, [sceneProgress]);

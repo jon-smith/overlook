@@ -351,7 +351,7 @@ export function drawScene(ctx: CanvasRenderingContext2D, sceneProgress: number) 
 		const column = getColumn(columnIndex + c);
 		if (column) {
 			ctx.save();
-			ctx.translate(c * 16 - columnOffset, 0);
+			ctx.translate(c * 16 - columnOffset, 0.0);
 			drawColumn(ctx, column);
 			ctx.restore();
 		}
