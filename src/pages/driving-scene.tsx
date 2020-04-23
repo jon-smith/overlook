@@ -77,14 +77,16 @@ const DrivingScene = (props: Props) => {
 		}
 	});
 
+	// 1620 stops the car outside the hotel
+	const sceneProgressForDraw = Math.min(1620, sceneProgress);
 	useRequestAnimationFrame(() => {
 		if (canvasRef.current) {
 			const ctx = canvasRef.current.getContext('2d');
 			if (ctx) {
-				drawScene(ctx, Math.min(1620, sceneProgress));
+				drawScene(ctx, sceneProgressForDraw);
 			}
 		}
-	}, [sceneProgress]);
+	}, [sceneProgressForDraw]);
 
 	useInterval(() => {
 		if (!moving) {
