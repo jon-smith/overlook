@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import useInterval from 'hooks/use-interval';
 import useStateWithTime from 'hooks/use-state-with-time';
 import useRequestAnimationFrame from 'hooks/use-request-animation-frame';
-import { CANVAS_HEIGHT, CANVAS_WIDTH, drawScene } from './driving-scene-drawing';
+import { CANVAS_HEIGHT, CANVAS_WIDTH, DISTANCE_TO_HOTEL, drawScene } from './driving-scene-drawing';
 
 const elementIsWithinYRange = (element: Element) => {
 	const { top, bottom } = element.getBoundingClientRect();
@@ -50,8 +50,7 @@ const convertNumberKeyCodeToNumber = (keyCode: number): number | null => {
 	return null;
 };
 
-// 1620 stops the car outside the hotel
-const PROGRESS_VALUE_OUTSIDE_HOTEL = 1620;
+const PROGRESS_VALUE_OUTSIDE_HOTEL = DISTANCE_TO_HOTEL;
 const STOP_LENGTH = 50;
 const FADE_LENGTH = 100;
 const TOTAL_SCENE_LENGTH = PROGRESS_VALUE_OUTSIDE_HOTEL + STOP_LENGTH + FADE_LENGTH;
@@ -104,7 +103,7 @@ const DrivingScene = (props: Props) => {
 			} else {
 				const number = convertNumberKeyCodeToNumber(keyCode);
 				if (number !== null) {
-					setSceneProgress(number * 12 * 16);
+					setSceneProgress((number * DISTANCE_TO_HOTEL) / 9);
 				}
 			}
 		}

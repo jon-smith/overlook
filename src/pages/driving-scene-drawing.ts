@@ -332,6 +332,9 @@ const columnsAndDuration: readonly [SceneColumnDefinition, number][] = [
 	[[afterOverlookTop, winterBottom], 20]
 ];
 
+const TOTAL_COLUMNS = columnsAndDuration.map(c => c[1]).reduce((a, b) => a + b, 0);
+export const DISTANCE_TO_HOTEL = (TOTAL_COLUMNS - 45) * 16 + 4;
+
 function getColumn(index: number): SceneColumnDefinition | null {
 	let cumulative = 0;
 	for (let i = 0; i < columnsAndDuration.length; ++i) {
