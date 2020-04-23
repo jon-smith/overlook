@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import useInterval from 'hooks/use-interval';
 import useStateWithTime from 'hooks/use-state-with-time';
+import useRequestAnimationFrame from 'hooks/use-request-animation-frame';
 import { CANVAS_HEIGHT, CANVAS_WIDTH, drawScene } from './driving-scene-drawing';
 
 const elementIsWithinYRange = (element: Element) => {
@@ -76,7 +77,7 @@ const DrivingScene = (props: Props) => {
 		}
 	});
 
-	useEffect(() => {
+	useRequestAnimationFrame(() => {
 		if (canvasRef.current) {
 			const ctx = canvasRef.current.getContext('2d');
 			if (ctx) {
