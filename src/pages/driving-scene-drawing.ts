@@ -341,10 +341,12 @@ function getColumn(index: number): SceneColumnDefinition | null {
 	return null;
 }
 
-export function drawScene(ctx: CanvasRenderingContext2D, sceneProgress: number) {
+export function drawScene(ctx: CanvasRenderingContext2D, sceneProgress: number, alpha: number) {
 	const columnOffset = Math.floor(sceneProgress) % 16;
 	const columnIndex = Math.floor(sceneProgress / 16);
 	ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+	console.log(alpha);
+	ctx.globalAlpha = alpha;
 
 	for (let c = -1; c < CANVAS_WIDTH / 16 + 1; c += 1) {
 		const column = getColumn(columnIndex + c);

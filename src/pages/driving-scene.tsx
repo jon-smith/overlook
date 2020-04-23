@@ -49,6 +49,35 @@ const convertNumberKeyCodeToNumber = (keyCode: number): number | null => {
 	return null;
 };
 
+// 1620 stops the car outside the hotel
+const PROGRESS_VALUE_OUTSIDE_HOTEL = 1620;
+const STOP_LENGTH = 50;
+const FADE_LENGTH = 100;
+const TOTAL_SCENE_LENGTH = PROGRESS_VALUE_OUTSIDE_HOTEL + STOP_LENGTH + FADE_LENGTH * 2;
+
+function calculateProgressAndAlpha(progress: number) {
+	if (progress < PROGRESS_VALUE_OUTSIDE_HOTEL)
+		return { sceneProgressForDraw: progress, alpha: 1.0 };
+
+	if (progress < PROGRESS_VALUE_OUTSIDE_HOTEL + STOP_LENGTH)
+		return { sceneProgressForDraw: PROGRESS_VALUE_OUTSIDE_HOTEL, alpha: 1.0 };
+
+	if (progress < PROGRESS_VALUE_OUTSIDE_HOTEL + STOP_LENGTH + FADE_LENGTH) {
+		const intoFade = progress - (PROGRESS_VALUE_OUTSIDE_HOTEL + STOP_LENGTH);
+		return {
+			sceneProgressForDraw: PROGRESS_VALUE_OUTSIDE_HOTEL,
+			alpha: 1.0 - intoFade / FADE_LENGTH
+		};
+	}
+
+	if (progress < PROGRESS_VALUE_OUTSIDE_HOTEL + STOP_LENGTH + FADE_LENGTH * 2) {
+		const intoFade = progress - (PROGRESS_VALUE_OUTSIDE_HOTEL + STOP_LENGTH + FADE_LENGTH);
+		return { sceneProgressForDraw: 0, alpha: intoFade / FADE_LENGTH };
+	}
+
+	return { sceneProgressForDraw: 0, alpha: 1.0 };
+}
+
 const DrivingScene = (props: Props) => {
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -77,16 +106,16 @@ const DrivingScene = (props: Props) => {
 		}
 	});
 
-	// 1620 stops the car outside the hotel
-	const sceneProgressForDraw = Math.min(1620, sceneProgress);
+	const { sceneProgressForDraw, alpha } = calculateProgressAndAlpha(sceneProgress);
+
 	useRequestAnimationFrame(() => {
 		if (canvasRef.current) {
 			const ctx = canvasRef.current.getContext('2d');
 			if (ctx) {
-				drawScene(ctx, sceneProgressForDraw);
+				drawScene(ctx, sceneProgressForDraw, alpha);
 			}
 		}
-	}, [sceneProgressForDraw]);
+	}, [sceneProgressForDraw, alpha]);
 
 	useInterval(() => {
 		if (!moving) {
@@ -98,7 +127,9 @@ const DrivingScene = (props: Props) => {
 		const sinceLast = Date.now() - setProgressTime;
 		const speedToUse = clamp(speed, [5, 100]);
 		const distance = speedToUse * sinceLast * 0.001;
-		setSceneProgress(sceneProgress + distance);
+		const newProgress = sceneProgress + distance;
+		// Reset when we reach totalSceneProgress
+		setSceneProgress(newProgress % TOTAL_SCENE_LENGTH);
 	}, 1000 / 25);
 
 	return (
