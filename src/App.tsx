@@ -25,10 +25,6 @@ const FourPageNoiseCanvas = () => {
 	);
 };
 
-const DrivingSceneFullScreen = () => {
-	return <DrivingScene className={styles.drivingSceneCanvas} />;
-};
-
 const convertDoorScenePercentage = (percentage: number) => {
 	// The start percentage depends on the height of the div in the current parallax section
 	const startP = 0.375;
@@ -38,6 +34,10 @@ const convertDoorScenePercentage = (percentage: number) => {
 const scrollToId = (id: string) => {
 	const anchor = document.querySelector(`#${id}`);
 	if (anchor) anchor.scrollIntoView({ behavior: 'smooth', block: 'end' });
+};
+
+const DrivingSceneFullScreen = () => {
+	return <DrivingScene className={styles.drivingSceneCanvas} />;
 };
 
 type NavID = 'top' | 'driving' | 'typewriter' | 'door-scene' | 'bottom';

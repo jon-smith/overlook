@@ -33,6 +33,7 @@ const useWindowKeyDown = (handler: (e: KeyboardEvent) => void) => {
 interface Props {
 	className?: string;
 	style?: React.CSSProperties;
+	onEndScene?: () => void;
 }
 
 const LEFT_ARROW = 37;
@@ -53,7 +54,8 @@ const convertNumberKeyCodeToNumber = (keyCode: number): number | null => {
 const PROGRESS_VALUE_OUTSIDE_HOTEL = 1620;
 const STOP_LENGTH = 50;
 const FADE_LENGTH = 100;
-const TOTAL_SCENE_LENGTH = PROGRESS_VALUE_OUTSIDE_HOTEL + STOP_LENGTH + FADE_LENGTH * 2;
+const TOTAL_SCENE_LENGTH = PROGRESS_VALUE_OUTSIDE_HOTEL + STOP_LENGTH + FADE_LENGTH;
+const TOTAL_SCENE_LENGTH_PLUS_FADE_IN = TOTAL_SCENE_LENGTH + FADE_LENGTH;
 
 function calculateProgressAndAlpha(progress: number) {
 	if (progress < PROGRESS_VALUE_OUTSIDE_HOTEL)
@@ -79,6 +81,8 @@ function calculateProgressAndAlpha(progress: number) {
 }
 
 const DrivingScene = (props: Props) => {
+	const { className, style, onEndScene } = props;
+
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 
 	const [moving, setMoving] = useState(true);
@@ -106,17 +110,6 @@ const DrivingScene = (props: Props) => {
 		}
 	});
 
-	const { sceneProgressForDraw, alpha } = calculateProgressAndAlpha(sceneProgress);
-
-	useRequestAnimationFrame(() => {
-		if (canvasRef.current) {
-			const ctx = canvasRef.current.getContext('2d');
-			if (ctx) {
-				drawScene(ctx, sceneProgressForDraw, alpha);
-			}
-		}
-	}, [sceneProgressForDraw, alpha]);
-
 	useInterval(() => {
 		if (!moving) {
 			// Even if not moving, set the time so we update the time
@@ -128,17 +121,31 @@ const DrivingScene = (props: Props) => {
 		const speedToUse = clamp(speed, [5, 100]);
 		const distance = speedToUse * sinceLast * 0.001;
 		const newProgress = sceneProgress + distance;
+		if (sceneProgress < TOTAL_SCENE_LENGTH && newProgress >= TOTAL_SCENE_LENGTH) {
+			onEndScene?.();
+		}
 		// Reset when we reach totalSceneProgress
-		setSceneProgress(newProgress % TOTAL_SCENE_LENGTH);
+		setSceneProgress(newProgress % TOTAL_SCENE_LENGTH_PLUS_FADE_IN);
 	}, 1000 / 25);
+
+	const { sceneProgressForDraw, alpha } = calculateProgressAndAlpha(sceneProgress);
+
+	useRequestAnimationFrame(() => {
+		if (canvasRef.current) {
+			const ctx = canvasRef.current.getContext('2d');
+			if (ctx) {
+				drawScene(ctx, sceneProgressForDraw, alpha);
+			}
+		}
+	}, [sceneProgressForDraw, alpha]);
 
 	return (
 		<canvas
 			ref={canvasRef}
 			width={CANVAS_WIDTH}
 			height={CANVAS_HEIGHT}
-			style={props.style}
-			className={props.className}
+			style={style}
+			className={className}
 		/>
 	);
 };
