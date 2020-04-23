@@ -14,6 +14,8 @@ import snowBoulderTile from 'img/tiles/snow_boulder_16x16.png';
 import snowGroundTile from 'img/tiles/snow_ground_16x16.png';
 import snowGroundRocksTile from 'img/tiles/snow_ground_rocks_16x16.png';
 import snowGrassTile from 'img/tiles/snow_grass_16x16.png';
+import snowStumpLeftTile from 'img/tiles/snow_stump_left_16x32.png';
+import snowStumpRightTile from 'img/tiles/snow_stump_right_16x32.png';
 import carSprite1 from 'img/sprites/yellow_car_1_32x16.png';
 import carSprite2 from 'img/sprites/yellow_car_2_32x16.png';
 import { FixedLengthArray } from 'utils/array-utils';
@@ -40,6 +42,8 @@ const snowBoulderImg = imgFromSource(snowBoulderTile);
 const snowGroundImg = imgFromSource(snowGroundTile);
 const snowGroundRocksImg = imgFromSource(snowGroundRocksTile);
 const snowGrassImg = imgFromSource(snowGrassTile);
+const snowStumpLeftImg = imgFromSource(snowStumpLeftTile);
+const snowStumpRightImg = imgFromSource(snowStumpRightTile);
 const carImg1 = imgFromSource(carSprite1);
 const carImg2 = imgFromSource(carSprite2);
 
@@ -205,6 +209,39 @@ const lakeTopTransition2 = (nBoulders: number): AboveRoadDefinition => [
 	[getLakeTopTransition2Cell(0, nBoulders), 1]
 ];
 
+const getSnowTopCell = (
+	cell: number,
+	includeTree: 'left' | 'right' | 'none',
+	treePos: number
+): [HTMLImageElement, number] | null => {
+	if (includeTree !== 'none') {
+		if (cell - 1 === treePos) {
+			return null;
+		}
+		if (cell === treePos) {
+			const img = includeTree === 'left' ? snowStumpLeftImg : snowStumpRightImg;
+			return [img, 2];
+		}
+	}
+
+	return [snowGrassImg, 1];
+};
+
+const snowTop = (
+	includeTree: 'left' | 'right' | 'none' = 'none',
+	treePos = 0
+): AboveRoadDefinition => [
+	[snowBoulderImg, 1],
+	getSnowTopCell(0, includeTree, treePos),
+	getSnowTopCell(1, includeTree, treePos),
+	getSnowTopCell(2, includeTree, treePos),
+	getSnowTopCell(3, includeTree, treePos),
+	getSnowTopCell(4, includeTree, treePos),
+	getSnowTopCell(5, includeTree, treePos),
+	getSnowTopCell(6, includeTree, treePos),
+	[snowGroundImg, 1]
+];
+
 const forestBottom = (
 	roadside: HTMLImageElement,
 	roadside2?: HTMLImageElement
@@ -296,7 +333,16 @@ const columnsAndDuration: readonly [SceneColumnDefinition, number][] = [
 	[[lakeTopTransition2(4), winterBottomTransition(3)], 1],
 	[[lakeTopTransition2(6), winterBottomTransition(4)], 1],
 	[[lakeTopTransition2(8), winterBottom], 1],
-	[[lakeTopTransition2(9), winterBottom], 10]
+	[[lakeTopTransition2(9), winterBottom], 1],
+	[[snowTop('left', 2), winterBottom], 1],
+	[[snowTop('right', 2), winterBottom], 1],
+	[[snowTop(), winterBottom], 2],
+	[[snowTop('left', 4), winterBottom], 1],
+	[[snowTop('right', 4), winterBottom], 1],
+	[[snowTop(), winterBottom], 1],
+	[[snowTop('left', 1), winterBottom], 1],
+	[[snowTop('right', 1), winterBottom], 1],
+	[[snowTop(), winterBottom], 10]
 ];
 
 function getColumn(index: number): SceneColumnDefinition | null {
