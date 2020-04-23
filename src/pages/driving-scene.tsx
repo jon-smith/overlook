@@ -104,7 +104,7 @@ const DrivingScene = (props: Props) => {
 			} else {
 				const number = convertNumberKeyCodeToNumber(keyCode);
 				if (number !== null) {
-					setSceneProgress(number * 24 * 16);
+					setSceneProgress(number * 12 * 16);
 				}
 			}
 		}
