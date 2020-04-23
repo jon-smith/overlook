@@ -21,19 +21,22 @@ type BelowRoadDefinition = FixedLengthArray<
 type SceneColumnDefinition = [AboveRoadDefinition, BelowRoadDefinition];
 
 function drawColumn(ctx: CanvasRenderingContext2D, def: SceneColumnDefinition) {
-	const drawCell = (img: CanvasImageSource, row: number, imgDim: [number, number]) => {
+	const drawCell = (img: CanvasImageSource, row: number) => {
+		const { width, height } = img;
 		const y = (row + BLANK_ROWS) * 16;
-		ctx.drawImage(img, 0, y, imgDim[0], imgDim[1]);
+		ctx.drawImage(img, 0, y, width as number, height as number);
 	};
 
 	def[0].forEach((cell, i) => {
-		if (cell) drawCell(cell[0], i, [16, cell[1] * 16]);
+		if (cell) drawCell(cell[0], i);
 	});
 
-	drawCell(tile.road, ABOVE_ROAD_ROWS, [16, 16]);
+	drawCell(tile.road, ABOVE_ROAD_ROWS);
 
 	def[1].forEach((cell, i) => {
-		if (cell) drawCell(cell[0], i + 1 + ABOVE_ROAD_ROWS, [16, cell[1] * 16]);
+		if (cell) {
+			drawCell(cell[0], i + 1 + ABOVE_ROAD_ROWS);
+		}
 	});
 }
 
@@ -197,6 +200,42 @@ const snowTop = (
 	[tile.snowGround, 1]
 ];
 
+const overlookTop: AboveRoadDefinition = [
+	[tile.snowBoulder, 1],
+	[tile.snowBoulder, 1],
+	[tile.snowBoulder, 1],
+	[tile.snowBoulder, 1],
+	[tile.hotel, 5],
+	null,
+	null,
+	null,
+	null
+];
+
+const overlookTop2: AboveRoadDefinition = [
+	[tile.snowBoulder, 1],
+	[tile.snowBoulder, 1],
+	[tile.snowBoulder, 1],
+	[tile.snowBoulder, 1],
+	null,
+	null,
+	null,
+	null,
+	null
+];
+
+const afterOverlookTop: AboveRoadDefinition = [
+	[tile.snowBoulder, 1],
+	[tile.snowBoulder, 1],
+	[tile.snowBoulder, 1],
+	[tile.snowBoulder, 1],
+	[tile.snowGrass, 1],
+	[tile.snowGrass, 1],
+	[tile.snowGrass, 1],
+	[tile.snowGrass, 1],
+	[tile.snowGrass, 1]
+];
+
 const forestBottom = (
 	roadside: HTMLImageElement,
 	roadside2?: HTMLImageElement
@@ -297,7 +336,10 @@ const columnsAndDuration: readonly [SceneColumnDefinition, number][] = [
 	[[snowTop(), winterBottom], 1],
 	[[snowTop('left', 1), winterBottom], 1],
 	[[snowTop('right', 1), winterBottom], 1],
-	[[snowTop(), winterBottom], 10]
+	[[snowTop(), winterBottom], 10],
+	[[overlookTop, winterBottom], 1],
+	[[overlookTop2, winterBottom], 11],
+	[[afterOverlookTop, winterBottom], 20]
 ];
 
 function getColumn(index: number): SceneColumnDefinition | null {

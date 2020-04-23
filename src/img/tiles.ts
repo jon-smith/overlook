@@ -16,6 +16,7 @@ import snowGroundRocksTile from 'img/tiles/snow_ground_rocks_16x16.png';
 import snowGrassTile from 'img/tiles/snow_grass_16x16.png';
 import snowStumpLeftTile from 'img/tiles/snow_stump_left_16x32.png';
 import snowStumpRightTile from 'img/tiles/snow_stump_right_16x32.png';
+import overlookHotelTile from 'img/tiles/overlook_hotel_192x80.png';
 import { htmlImageFromSource as imgFromSource } from 'img/image-utils';
 
 export const tree = imgFromSource(bigTreeTile);
@@ -36,3 +37,4 @@ export const snowGroundRocks = imgFromSource(snowGroundRocksTile);
 export const snowGrass = imgFromSource(snowGrassTile);
 export const snowStumpLeft = imgFromSource(snowStumpLeftTile);
 export const snowStumpRight = imgFromSource(snowStumpRightTile);
+export const hotel = imgFromSource(overlookHotelTile);
