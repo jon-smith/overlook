@@ -42,15 +42,15 @@ const stageAndRelativeProgress = (p: number): StageAndRelativeProgress => {
 	return { stage: 'exit', relativeP: zeroToN - (N - 1) };
 };
 
-const bottomOffsetAndDoorSize = (p: StageAndRelativeProgress) => {
+const yOffsetAndDoorSize = (p: StageAndRelativeProgress) => {
 	const maxDoorSize = 9;
 	if (p.stage === 'door') {
-		return { bottomOffset: p.relativeP * 55 - 10, doorSize: p.relativeP * maxDoorSize };
+		return { yOffset: 50 - p.relativeP * 50, doorSize: p.relativeP * maxDoorSize };
 	}
 	if (p.stage === 'exit') {
-		return { bottomOffset: p.relativeP * 55 + 45, doorSize: maxDoorSize };
+		return { yOffset: -p.relativeP * 100, doorSize: maxDoorSize };
 	}
-	return { bottomOffset: 45, doorSize: maxDoorSize };
+	return { yOffset: 0, doorSize: maxDoorSize };
 };
 
 const calcAxeOffset = (p: StageAndRelativeProgress) => {
@@ -84,7 +84,7 @@ const DoorSceneContents = (props: { percentage: number }) => {
 	const stageAndP = stageAndRelativeProgress(percentage);
 	const stageIndex = stageToIndex(stageAndP.stage);
 
-	const { bottomOffset, doorSize } = bottomOffsetAndDoorSize(stageAndP);
+	const { yOffset, doorSize } = yOffsetAndDoorSize(stageAndP);
 	const axeOffset = calcAxeOffset(stageAndP);
 	const faceOffset = calcFaceOffset(stageAndP);
 	return (
@@ -93,9 +93,9 @@ const DoorSceneContents = (props: { percentage: number }) => {
 				<FixedIconContainer
 					icon={angry}
 					widthEm={5}
-					leftOffsetEm={faceOffset}
-					bottomOffsetPc={bottomOffset}
-					bottomOffsetEm={3}
+					xOffsetEm={faceOffset}
+					yOffsetPc={yOffset}
+					yOffsetEm={-1.5}
 				/>
 			)}
 			{stageIndex >= stageToIndex('axe') && (
@@ -103,12 +103,12 @@ const DoorSceneContents = (props: { percentage: number }) => {
 					icon={axe}
 					widthEm={5}
 					hFlip={true}
-					leftOffsetEm={axeOffset}
-					bottomOffsetPc={bottomOffset}
-					bottomOffsetEm={1.5}
+					xOffsetEm={axeOffset}
+					yOffsetPc={yOffset}
+					yOffsetEm={0}
 				/>
 			)}
-			<FixedIconContainer icon={door} widthEm={doorSize} bottomOffsetPc={bottomOffset} />
+			<FixedIconContainer icon={door} widthEm={doorSize} yOffsetPc={yOffset} />
 		</>
 	);
 };

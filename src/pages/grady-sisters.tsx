@@ -63,20 +63,8 @@ const GradySisters = () => {
 		<div ref={divRef}>
 			{display && (
 				<>
-					<FixedIconContainer
-						icon={girlLightSkinTone}
-						widthEm={5}
-						bottomOffsetPc={50}
-						bottomOffsetEm={-2.5}
-						leftOffsetEm={-2.5}
-					/>
-					<FixedIconContainer
-						icon={girlLightSkinTone}
-						widthEm={5}
-						bottomOffsetPc={50}
-						bottomOffsetEm={-2.5}
-						leftOffsetEm={2.5}
-					/>
+					<FixedIconContainer icon={girlLightSkinTone} widthEm={5} xOffsetEm={-2.5} />
+					<FixedIconContainer icon={girlLightSkinTone} widthEm={5} xOffsetEm={2.5} />
 					<div
 						style={{
 							position: 'fixed',
