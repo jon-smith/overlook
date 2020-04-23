@@ -279,7 +279,7 @@ const winterBottom: BelowRoadDefinition = [
 ];
 
 const columnsAndDuration: readonly [SceneColumnDefinition, number][] = [
-	[[forestTop(tile.smallTree), forestBottom(tile.grass)], 30],
+	[[forestTop(tile.smallTree), forestBottom(tile.grass)], 25],
 	[[forestTop(tile.grass), forestBottom(tile.grass)], 1],
 	[[forestTop(tile.mudLight), forestBottom(tile.grass)], 3],
 	[[forestTop(tile.grass), forestBottom(tile.grass)], 1],
@@ -297,12 +297,12 @@ const columnsAndDuration: readonly [SceneColumnDefinition, number][] = [
 	[[forestToLake3, forestBottom(tile.grass)], 1],
 	[[forestToLake4, forestBottom(tile.grass)], 1],
 	// Lake top
-	[[lakeTop(), forestBottom(tile.grass)], 5],
+	[[lakeTop(), forestBottom(tile.grass)], 4],
 	[[lakeTop(tile.waterLeftEdge), forestBottom(tile.grass)], 1],
 	[[lakeTop(tile.water), forestBottom(tile.grass)], 3],
 	[[lakeTop(tile.waterRightEdge), forestBottom(tile.mudLight)], 1],
-	[[lakeTop(), forestBottom(tile.mudLight)], 5],
-	[[lakeTop(), forestBottom(tile.mudLight, tile.mudLight)], 5],
+	[[lakeTop(), forestBottom(tile.mudLight)], 4],
+	[[lakeTop(), forestBottom(tile.mudLight, tile.mudLight)], 4],
 	[[lakeTopMountainLeft, forestBottom(tile.mudLight, tile.mudLight)], 1],
 	[[lakeTopMountainMid, forestBottom(tile.mudLight, tile.mudLight)], 4],
 	[[lakeTopMountainRight, forestBottom(tile.mudLight, tile.mudLight)], 1],
