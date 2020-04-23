@@ -1,11 +1,6 @@
-import carSprite1 from 'img/sprites/yellow_car_1_32x16.png';
-import carSprite2 from 'img/sprites/yellow_car_2_32x16.png';
-import { htmlImageFromSource as imgFromSource } from 'img/image-utils';
 import * as tile from 'img/tiles';
+import * as sprite from 'img/sprites';
 import { FixedLengthArray } from 'utils/array-utils';
-
-const carImg1 = imgFromSource(carSprite1);
-const carImg2 = imgFromSource(carSprite2);
 
 const BLANK_ROWS = 4; // This needs to be tuned for the current parallax settings to get the canvas into the centre
 const ABOVE_ROAD_ROWS = 9;
@@ -43,7 +38,7 @@ function drawColumn(ctx: CanvasRenderingContext2D, def: SceneColumnDefinition) {
 }
 
 function drawCar(ctx: CanvasRenderingContext2D, sceneProgress: number) {
-	const carImg = Math.floor(sceneProgress % 8) > 4 ? carImg1 : carImg2;
+	const carImg = Math.floor(sceneProgress % 8) > 4 ? sprite.car1 : sprite.car2;
 	ctx.drawImage(carImg, CANVAS_WIDTH / 2 - 8, (BLANK_ROWS + 9) * 16, 32, 16);
 }
 
