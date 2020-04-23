@@ -8,15 +8,9 @@ const BELOW_ROAD_ROWS = 8;
 export const CANVAS_WIDTH = 600;
 export const CANVAS_HEIGHT = (BLANK_ROWS + ABOVE_ROAD_ROWS + BELOW_ROAD_ROWS) * 16;
 
-type AboveRoadDefinition = FixedLengthArray<
-	[HTMLImageElement, number] | null,
-	typeof ABOVE_ROAD_ROWS
->;
+type AboveRoadDefinition = FixedLengthArray<HTMLImageElement | null, typeof ABOVE_ROAD_ROWS>;
 
-type BelowRoadDefinition = FixedLengthArray<
-	[HTMLImageElement, number] | null,
-	typeof BELOW_ROAD_ROWS
->;
+type BelowRoadDefinition = FixedLengthArray<HTMLImageElement | null, typeof BELOW_ROAD_ROWS>;
 
 type SceneColumnDefinition = [AboveRoadDefinition, BelowRoadDefinition];
 
@@ -28,14 +22,14 @@ function drawColumn(ctx: CanvasRenderingContext2D, def: SceneColumnDefinition) {
 	};
 
 	def[0].forEach((cell, i) => {
-		if (cell) drawCell(cell[0], i);
+		if (cell) drawCell(cell, i);
 	});
 
 	drawCell(tile.road, ABOVE_ROAD_ROWS);
 
 	def[1].forEach((cell, i) => {
 		if (cell) {
-			drawCell(cell[0], i + 1 + ABOVE_ROAD_ROWS);
+			drawCell(cell, i + 1 + ABOVE_ROAD_ROWS);
 		}
 	});
 }
@@ -46,80 +40,80 @@ function drawCar(ctx: CanvasRenderingContext2D, sceneProgress: number) {
 }
 
 const forestTop = (roadside: HTMLImageElement): AboveRoadDefinition => [
-	[tile.tree, 2],
+	tile.tree,
 	null,
-	[tile.tree, 2],
+	tile.tree,
 	null,
-	[tile.tree, 2],
+	tile.tree,
 	null,
-	[tile.tree, 2],
+	tile.tree,
 	null,
-	[roadside, 1]
+	roadside
 ];
 
 const forestToLake = (
 	roadside: [HTMLImageElement, HTMLImageElement, HTMLImageElement]
 ): AboveRoadDefinition => [
-	[tile.tree, 2],
+	tile.tree,
 	null,
-	[tile.tree, 2],
+	tile.tree,
 	null,
-	[tile.tree, 2],
+	tile.tree,
 	null,
-	[roadside[0], 1],
-	[roadside[1], 1],
-	[roadside[2], 1]
+	roadside[0],
+	roadside[1],
+	roadside[2]
 ];
 
 const forestToLake1: AboveRoadDefinition = [
-	[tile.tree, 2],
+	tile.tree,
 	null,
-	[tile.tree, 2],
+	tile.tree,
 	null,
-	[tile.tree, 2],
+	tile.tree,
 	null,
-	[tile.tree, 2],
+	tile.tree,
 	null,
-	[tile.mudLight, 1]
+	tile.mudLight
 ];
 
 const forestToLake2 = forestToLake([tile.smallTree, tile.mudLight, tile.mudLight]);
 const forestToLake3 = forestToLake([tile.mudLight, tile.mudLight, tile.mudLight]);
 
 const forestToLake4: AboveRoadDefinition = [
-	[tile.waterLeftEdge, 1],
-	[tile.waterLeftEdge, 1],
-	[tile.waterLeftEdge, 1],
-	[tile.waterLeftEdge, 1],
-	[tile.mudLight, 1],
-	[tile.mudLight, 1],
-	[tile.mudLight, 1],
-	[tile.mudLight, 1],
-	[tile.mudLight, 1]
+	tile.waterLeftEdge,
+	tile.waterLeftEdge,
+	tile.waterLeftEdge,
+	tile.waterLeftEdge,
+	tile.mudLight,
+	tile.mudLight,
+	tile.mudLight,
+	tile.mudLight,
+	tile.mudLight
 ];
 
 const lakeTop = (cutout?: HTMLImageElement): AboveRoadDefinition => [
-	[tile.water, 1],
-	[tile.water, 1],
-	[tile.water, 1],
-	[tile.water, 1],
-	[cutout ?? tile.mudLight, 1],
-	[tile.mudLight, 1],
-	[tile.mudLight, 1],
-	[tile.mudLight, 1],
-	[tile.mudLight, 1]
+	tile.water,
+	tile.water,
+	tile.water,
+	tile.water,
+	cutout ?? tile.mudLight,
+	tile.mudLight,
+	tile.mudLight,
+	tile.mudLight,
+	tile.mudLight
 ];
 
 const lakeTopMountain = (edge1: HTMLImageElement, edge2: HTMLImageElement): AboveRoadDefinition => [
-	[edge1, 1],
-	[edge2, 1],
-	[tile.water, 1],
-	[tile.water, 1],
-	[tile.mudLight, 1],
-	[tile.mudLight, 1],
-	[tile.mudLight, 1],
-	[tile.mudLight, 1],
-	[tile.mudLight, 1]
+	edge1,
+	edge2,
+	tile.water,
+	tile.water,
+	tile.mudLight,
+	tile.mudLight,
+	tile.mudLight,
+	tile.mudLight,
+	tile.mudLight
 ];
 
 const lakeTopMountainLeft = lakeTopMountain(tile.waterRightEdge, tile.waterTopRightEdge);
@@ -133,15 +127,15 @@ const getLakeTopTransitionCell = (cell: number, nGround: number, nEdges: number)
 };
 
 const lakeTopTransition = (nGround: number, nEdges: number): AboveRoadDefinition => [
-	[getLakeTopTransitionCell(3, nGround, nEdges), 1],
-	[getLakeTopTransitionCell(2, nGround, nEdges), 1],
-	[getLakeTopTransitionCell(1, nGround, nEdges), 1],
-	[getLakeTopTransitionCell(0, nGround, nEdges), 1],
-	[tile.mudLight, 1],
-	[tile.mudLight, 1],
-	[tile.mudLight, 1],
-	[tile.mudLight, 1],
-	[tile.mudLight, 1]
+	getLakeTopTransitionCell(3, nGround, nEdges),
+	getLakeTopTransitionCell(2, nGround, nEdges),
+	getLakeTopTransitionCell(1, nGround, nEdges),
+	getLakeTopTransitionCell(0, nGround, nEdges),
+	tile.mudLight,
+	tile.mudLight,
+	tile.mudLight,
+	tile.mudLight,
+	tile.mudLight
 ];
 
 const getLakeTopTransition2Cell = (cell: number, nBoulders: number) => {
@@ -156,40 +150,40 @@ const getLakeTopTransition2Cell = (cell: number, nBoulders: number) => {
 };
 
 const lakeTopTransition2 = (nBoulders: number): AboveRoadDefinition => [
-	[getLakeTopTransition2Cell(8, nBoulders), 1],
-	[getLakeTopTransition2Cell(7, nBoulders), 1],
-	[getLakeTopTransition2Cell(6, nBoulders), 1],
-	[getLakeTopTransition2Cell(5, nBoulders), 1],
-	[getLakeTopTransition2Cell(4, nBoulders), 1],
-	[getLakeTopTransition2Cell(3, nBoulders), 1],
-	[getLakeTopTransition2Cell(2, nBoulders), 1],
-	[getLakeTopTransition2Cell(1, nBoulders), 1],
-	[getLakeTopTransition2Cell(0, nBoulders), 1]
+	getLakeTopTransition2Cell(8, nBoulders),
+	getLakeTopTransition2Cell(7, nBoulders),
+	getLakeTopTransition2Cell(6, nBoulders),
+	getLakeTopTransition2Cell(5, nBoulders),
+	getLakeTopTransition2Cell(4, nBoulders),
+	getLakeTopTransition2Cell(3, nBoulders),
+	getLakeTopTransition2Cell(2, nBoulders),
+	getLakeTopTransition2Cell(1, nBoulders),
+	getLakeTopTransition2Cell(0, nBoulders)
 ];
 
 const getSnowTopCell = (
 	cell: number,
 	includeTree: 'left' | 'right' | 'none',
 	treePos: number
-): [HTMLImageElement, number] | null => {
+): HTMLImageElement | null => {
 	if (includeTree !== 'none') {
 		if (cell - 1 === treePos) {
 			return null;
 		}
 		if (cell === treePos) {
 			const img = includeTree === 'left' ? tile.snowStumpLeft : tile.snowStumpRight;
-			return [img, 2];
+			return img;
 		}
 	}
 
-	return [tile.snowGrass, 1];
+	return tile.snowGrass;
 };
 
 const snowTop = (
 	includeTree: 'left' | 'right' | 'none' = 'none',
 	treePos = 0
 ): AboveRoadDefinition => [
-	[tile.snowBoulder, 1],
+	tile.snowBoulder,
 	getSnowTopCell(0, includeTree, treePos),
 	getSnowTopCell(1, includeTree, treePos),
 	getSnowTopCell(2, includeTree, treePos),
@@ -197,15 +191,15 @@ const snowTop = (
 	getSnowTopCell(4, includeTree, treePos),
 	getSnowTopCell(5, includeTree, treePos),
 	getSnowTopCell(6, includeTree, treePos),
-	[tile.snowGround, 1]
+	tile.snowGround
 ];
 
 const overlookTop: AboveRoadDefinition = [
-	[tile.snowBoulder, 1],
-	[tile.snowBoulder, 1],
-	[tile.snowBoulder, 1],
-	[tile.snowBoulder, 1],
-	[tile.hotel, 5],
+	tile.snowBoulder,
+	tile.snowBoulder,
+	tile.snowBoulder,
+	tile.snowBoulder,
+	tile.hotel,
 	null,
 	null,
 	null,
@@ -213,10 +207,10 @@ const overlookTop: AboveRoadDefinition = [
 ];
 
 const overlookTop2: AboveRoadDefinition = [
-	[tile.snowBoulder, 1],
-	[tile.snowBoulder, 1],
-	[tile.snowBoulder, 1],
-	[tile.snowBoulder, 1],
+	tile.snowBoulder,
+	tile.snowBoulder,
+	tile.snowBoulder,
+	tile.snowBoulder,
 	null,
 	null,
 	null,
@@ -225,35 +219,32 @@ const overlookTop2: AboveRoadDefinition = [
 ];
 
 const afterOverlookTop: AboveRoadDefinition = [
-	[tile.snowBoulder, 1],
-	[tile.snowBoulder, 1],
-	[tile.snowBoulder, 1],
-	[tile.snowBoulder, 1],
-	[tile.snowGrass, 1],
-	[tile.snowGrass, 1],
-	[tile.snowGrass, 1],
-	[tile.snowGrass, 1],
-	[tile.snowGrass, 1]
+	tile.snowBoulder,
+	tile.snowBoulder,
+	tile.snowBoulder,
+	tile.snowBoulder,
+	tile.snowGrass,
+	tile.snowGrass,
+	tile.snowGrass,
+	tile.snowGrass,
+	tile.snowGrass
 ];
 
 const forestBottom = (
 	roadside: HTMLImageElement,
 	roadside2?: HTMLImageElement
 ): BelowRoadDefinition => [
-	[roadside, 1],
-	[roadside2 ?? tile.smallTree, 1],
-	[tile.tree, 2],
+	roadside,
+	roadside2 ?? tile.smallTree,
+	tile.tree,
 	null,
-	[tile.tree, 2],
+	tile.tree,
 	null,
-	[tile.tree, 2],
+	tile.tree,
 	null
 ];
 
-const getWinterBottomTransitionCell = (
-	cell: number,
-	stage: number
-): [HTMLImageElement, number] | null => {
+const getWinterBottomTransitionCell = (cell: number, stage: number): HTMLImageElement | null => {
 	const imgForCell = (c: number) => {
 		const offsetCell = c - 1;
 		if (offsetCell < stage) return tile.snowBoulder;
@@ -262,12 +253,11 @@ const getWinterBottomTransitionCell = (
 	};
 	// If the cell above is a large tree, this cell is null
 	if (cell % 2 !== 0 && imgForCell(cell - 1) === tile.tree) return null;
-	const thisCellImg = imgForCell(cell);
-	return [thisCellImg, thisCellImg === tile.tree ? 2 : 1];
+	return imgForCell(cell);
 };
 
 const winterBottomTransition = (stage: number): BelowRoadDefinition => [
-	[tile.snowBoulder, 1],
+	tile.snowBoulder,
 	getWinterBottomTransitionCell(1, stage),
 	getWinterBottomTransitionCell(2, stage),
 	getWinterBottomTransitionCell(3, stage),
@@ -278,14 +268,14 @@ const winterBottomTransition = (stage: number): BelowRoadDefinition => [
 ];
 
 const winterBottom: BelowRoadDefinition = [
-	[tile.snowGround, 1],
-	[tile.snowGround, 1],
-	[tile.snowGround, 1],
-	[tile.snowGround, 1],
-	[tile.snowGroundRocks, 1],
-	[tile.snowGroundRocks, 1],
-	[tile.snowGroundRocks, 1],
-	[tile.snowGroundRocks, 1]
+	tile.snowGround,
+	tile.snowGround,
+	tile.snowGround,
+	tile.snowGround,
+	tile.snowGroundRocks,
+	tile.snowGroundRocks,
+	tile.snowGroundRocks,
+	tile.snowGroundRocks
 ];
 
 const columnsAndDuration: readonly [SceneColumnDefinition, number][] = [
