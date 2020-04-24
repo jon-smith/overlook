@@ -1,11 +1,17 @@
-import React, { useEffect, useRef, useState, useCallback } from 'react';
+import React, { useEffect, useRef, useState, useCallback, useMemo } from 'react';
+import { useAsync } from '@react-hook/async';
 import useInterval from 'hooks/use-interval';
 import useStateWithTime from 'hooks/use-state-with-time';
+import { useRequestAnimationFrameLoop } from 'hooks/use-request-animation-frame';
+import { loadTiles } from 'img/tiles';
+import { loadSprites, SpritesT } from 'img/sprites';
 import {
-	useRequestAnimationFrame,
-	useRequestAnimationFrameLoop
-} from 'hooks/use-request-animation-frame';
-import { CANVAS_HEIGHT, CANVAS_WIDTH, DISTANCE_TO_HOTEL, drawScene } from './driving-scene-drawing';
+	CANVAS_HEIGHT,
+	CANVAS_WIDTH,
+	makeColumnDefinitions,
+	SceneColumnDefinition
+} from './driving-scene-columns';
+import { drawScene } from './driving-scene-drawing';
 
 const elementIsWithinYRange = (element: Element) => {
 	const { top, bottom } = element.getBoundingClientRect();
@@ -54,44 +60,62 @@ const convertNumberKeyCodeToNumber = (keyCode: number): number | null => {
 	return null;
 };
 
-const PROGRESS_VALUE_OUTSIDE_HOTEL = DISTANCE_TO_HOTEL;
-const STOP_LENGTH = 50;
-const FADE_LENGTH = 100;
-const TOTAL_SCENE_LENGTH = PROGRESS_VALUE_OUTSIDE_HOTEL + STOP_LENGTH + FADE_LENGTH;
-const TOTAL_SCENE_LENGTH_PLUS_FADE_IN = TOTAL_SCENE_LENGTH + FADE_LENGTH;
+function calculateLengths(distanceToHotel: number) {
+	const STOP_LENGTH = 50;
+	const FADE_LENGTH = 100;
+	const totalSceneLength = distanceToHotel + STOP_LENGTH + FADE_LENGTH;
+	const totalSceneLengthPlusFadeIn = totalSceneLength + FADE_LENGTH;
+	return {
+		STOP_LENGTH,
+		FADE_LENGTH,
+		totalSceneLength,
+		totalSceneLengthPlusFadeIn
+	};
+}
 
 function calculateProgressAlphaAndStage(
-	progress: number
+	progress: number,
+	distanceToHotel: number
 ): {
 	sceneProgressForDraw: number;
 	alpha: number;
 	stage: 'main' | 'hotel' | 'fadeout' | 'fadein';
 } {
-	if (progress < PROGRESS_VALUE_OUTSIDE_HOTEL)
+	const { STOP_LENGTH, FADE_LENGTH } = calculateLengths(distanceToHotel);
+
+	if (progress < distanceToHotel)
 		return { sceneProgressForDraw: progress, alpha: 1.0, stage: 'main' };
 
-	if (progress < PROGRESS_VALUE_OUTSIDE_HOTEL + STOP_LENGTH)
-		return { sceneProgressForDraw: PROGRESS_VALUE_OUTSIDE_HOTEL, alpha: 1.0, stage: 'hotel' };
+	if (progress < distanceToHotel + STOP_LENGTH)
+		return { sceneProgressForDraw: distanceToHotel, alpha: 1.0, stage: 'hotel' };
 
-	if (progress < PROGRESS_VALUE_OUTSIDE_HOTEL + STOP_LENGTH + FADE_LENGTH) {
-		const intoFade = progress - (PROGRESS_VALUE_OUTSIDE_HOTEL + STOP_LENGTH);
+	if (progress < distanceToHotel + STOP_LENGTH + FADE_LENGTH) {
+		const intoFade = progress - (distanceToHotel + STOP_LENGTH);
 		return {
-			sceneProgressForDraw: PROGRESS_VALUE_OUTSIDE_HOTEL,
+			sceneProgressForDraw: distanceToHotel,
 			alpha: 1.0 - intoFade / FADE_LENGTH,
 			stage: 'fadeout'
 		};
 	}
 
-	if (progress < PROGRESS_VALUE_OUTSIDE_HOTEL + STOP_LENGTH + FADE_LENGTH * 2) {
-		const intoFade = progress - (PROGRESS_VALUE_OUTSIDE_HOTEL + STOP_LENGTH + FADE_LENGTH);
+	if (progress < distanceToHotel + STOP_LENGTH + FADE_LENGTH * 2) {
+		const intoFade = progress - (distanceToHotel + STOP_LENGTH + FADE_LENGTH);
 		return { sceneProgressForDraw: 0, alpha: intoFade / FADE_LENGTH, stage: 'fadein' };
 	}
 
 	return { sceneProgressForDraw: 0, alpha: 1.0, stage: 'main' };
 }
 
-const DrivingScene = (props: Props) => {
-	const { className, style, onEndScene } = props;
+type ImplProps = Props & {
+	sprites: SpritesT;
+	columnDefinitions: readonly SceneColumnDefinition[];
+	distanceToHotel: number;
+};
+
+const DrivingSceneImpl = (props: ImplProps) => {
+	const { className, style, sprites, distanceToHotel, columnDefinitions, onEndScene } = props;
+
+	const { totalSceneLength, totalSceneLengthPlusFadeIn } = calculateLengths(distanceToHotel);
 
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -117,7 +141,7 @@ const DrivingScene = (props: Props) => {
 			} else {
 				const number = convertNumberKeyCodeToNumber(keyCode);
 				if (number !== null) {
-					setSceneProgress((number * DISTANCE_TO_HOTEL) / 9);
+					setSceneProgress((number * distanceToHotel) / 9);
 				}
 			}
 		}
@@ -134,25 +158,37 @@ const DrivingScene = (props: Props) => {
 		const speedToUse = clamp(speed, [5, 100]);
 		const distance = speedToUse * sinceLast * 0.001;
 		const newProgress = sceneProgress + distance;
-		if (sceneProgress < TOTAL_SCENE_LENGTH && newProgress >= TOTAL_SCENE_LENGTH) {
+		if (sceneProgress < totalSceneLength && newProgress >= totalSceneLength) {
 			onEndScene?.();
 		}
 		// Reset when we reach totalSceneProgress
-		setSceneProgress(newProgress % TOTAL_SCENE_LENGTH_PLUS_FADE_IN);
+		setSceneProgress(newProgress % totalSceneLengthPlusFadeIn);
 	}, 1000 / 25);
 
-	const { sceneProgressForDraw, alpha, stage } = calculateProgressAlphaAndStage(sceneProgress);
+	const { sceneProgressForDraw, alpha } = calculateProgressAlphaAndStage(
+		sceneProgress,
+		distanceToHotel
+	);
 
 	const animationLoop = useCallback(() => {
 		if (canvasRef.current) {
 			const ctx = canvasRef.current.getContext('2d');
 			if (ctx) {
-				drawScene(ctx, sceneProgressForDraw, alpha, mode % 4 === 1, mode % 4 === 2, mode % 4 === 3);
+				drawScene(
+					ctx,
+					columnDefinitions,
+					sprites,
+					sceneProgressForDraw,
+					alpha,
+					mode % 4 === 1,
+					mode % 4 === 2,
+					mode % 4 === 3
+				);
 			}
 		}
-	}, [sceneProgressForDraw, alpha, mode]);
+	}, [sceneProgressForDraw, columnDefinitions, sprites, alpha, mode]);
 
-	useRequestAnimationFrameLoop(animationLoop, moving);
+	useRequestAnimationFrameLoop(animationLoop, true);
 
 	return (
 		<canvas
@@ -163,6 +199,34 @@ const DrivingScene = (props: Props) => {
 			className={className}
 		/>
 	);
+};
+
+const DrivingScene = (props: Props) => {
+	const [{ value: tiles }, callLoadTiles] = useAsync(loadTiles, []);
+	const [{ value: sprites }, callLoadSprites] = useAsync(loadSprites, []);
+
+	useEffect(
+		() => {
+			callLoadTiles();
+			callLoadSprites();
+		},
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+		[]
+	);
+
+	const columnDefs = useMemo(() => (tiles ? makeColumnDefinitions(tiles) : undefined), [tiles]);
+
+	if (sprites && columnDefs)
+		return (
+			<DrivingSceneImpl
+				sprites={sprites}
+				columnDefinitions={columnDefs.definitions}
+				distanceToHotel={columnDefs.distanceToHotel}
+				{...props}
+			/>
+		);
+
+	return <div />;
 };
 
 export default DrivingScene;
