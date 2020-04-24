@@ -1,7 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import useInterval from 'hooks/use-interval';
 import useStateWithTime from 'hooks/use-state-with-time';
-import useRequestAnimationFrame from 'hooks/use-request-animation-frame';
+import {
+	useRequestAnimationFrame,
+	useRequestAnimationFrameLoop
+} from 'hooks/use-request-animation-frame';
 import { CANVAS_HEIGHT, CANVAS_WIDTH, DISTANCE_TO_HOTEL, drawScene } from './driving-scene-drawing';
 
 const elementIsWithinYRange = (element: Element) => {
@@ -39,6 +42,7 @@ interface Props {
 const LEFT_ARROW = 37;
 const RIGHT_ARROW = 39;
 const SPACE_BAR = 32;
+const ENTER = 13;
 
 const convertNumberKeyCodeToNumber = (keyCode: number): number | null => {
 	// 0-9 keys
@@ -56,27 +60,34 @@ const FADE_LENGTH = 100;
 const TOTAL_SCENE_LENGTH = PROGRESS_VALUE_OUTSIDE_HOTEL + STOP_LENGTH + FADE_LENGTH;
 const TOTAL_SCENE_LENGTH_PLUS_FADE_IN = TOTAL_SCENE_LENGTH + FADE_LENGTH;
 
-function calculateProgressAndAlpha(progress: number) {
+function calculateProgressAlphaAndStage(
+	progress: number
+): {
+	sceneProgressForDraw: number;
+	alpha: number;
+	stage: 'main' | 'hotel' | 'fadeout' | 'fadein';
+} {
 	if (progress < PROGRESS_VALUE_OUTSIDE_HOTEL)
-		return { sceneProgressForDraw: progress, alpha: 1.0 };
+		return { sceneProgressForDraw: progress, alpha: 1.0, stage: 'main' };
 
 	if (progress < PROGRESS_VALUE_OUTSIDE_HOTEL + STOP_LENGTH)
-		return { sceneProgressForDraw: PROGRESS_VALUE_OUTSIDE_HOTEL, alpha: 1.0 };
+		return { sceneProgressForDraw: PROGRESS_VALUE_OUTSIDE_HOTEL, alpha: 1.0, stage: 'hotel' };
 
 	if (progress < PROGRESS_VALUE_OUTSIDE_HOTEL + STOP_LENGTH + FADE_LENGTH) {
 		const intoFade = progress - (PROGRESS_VALUE_OUTSIDE_HOTEL + STOP_LENGTH);
 		return {
 			sceneProgressForDraw: PROGRESS_VALUE_OUTSIDE_HOTEL,
-			alpha: 1.0 - intoFade / FADE_LENGTH
+			alpha: 1.0 - intoFade / FADE_LENGTH,
+			stage: 'fadeout'
 		};
 	}
 
 	if (progress < PROGRESS_VALUE_OUTSIDE_HOTEL + STOP_LENGTH + FADE_LENGTH * 2) {
 		const intoFade = progress - (PROGRESS_VALUE_OUTSIDE_HOTEL + STOP_LENGTH + FADE_LENGTH);
-		return { sceneProgressForDraw: 0, alpha: intoFade / FADE_LENGTH };
+		return { sceneProgressForDraw: 0, alpha: intoFade / FADE_LENGTH, stage: 'fadein' };
 	}
 
-	return { sceneProgressForDraw: 0, alpha: 1.0 };
+	return { sceneProgressForDraw: 0, alpha: 1.0, stage: 'main' };
 }
 
 const DrivingScene = (props: Props) => {
@@ -85,6 +96,7 @@ const DrivingScene = (props: Props) => {
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 
 	const [moving, setMoving] = useState(true);
+	const [mode, setMode] = useState(0);
 	const [speed, setSpeed] = useState(20); // pixels per second
 	const [sceneProgress, setSceneProgress, setProgressTime] = useStateWithTime(0, false);
 
@@ -100,6 +112,8 @@ const DrivingScene = (props: Props) => {
 					setMoving(!moving);
 					e.preventDefault();
 				}
+			} else if (keyCode === ENTER) {
+				setMode(mode + 1);
 			} else {
 				const number = convertNumberKeyCodeToNumber(keyCode);
 				if (number !== null) {
@@ -127,16 +141,18 @@ const DrivingScene = (props: Props) => {
 		setSceneProgress(newProgress % TOTAL_SCENE_LENGTH_PLUS_FADE_IN);
 	}, 1000 / 25);
 
-	const { sceneProgressForDraw, alpha } = calculateProgressAndAlpha(sceneProgress);
+	const { sceneProgressForDraw, alpha, stage } = calculateProgressAlphaAndStage(sceneProgress);
 
-	useRequestAnimationFrame(() => {
+	const animationLoop = useCallback(() => {
 		if (canvasRef.current) {
 			const ctx = canvasRef.current.getContext('2d');
 			if (ctx) {
-				drawScene(ctx, sceneProgressForDraw, alpha);
+				drawScene(ctx, sceneProgressForDraw, alpha, mode % 4 === 1, mode % 4 === 2, mode % 4 === 3);
 			}
 		}
-	}, [sceneProgressForDraw, alpha]);
+	}, [sceneProgressForDraw, alpha, mode]);
+
+	useRequestAnimationFrameLoop(animationLoop, moving);
 
 	return (
 		<canvas
