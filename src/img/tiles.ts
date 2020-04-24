@@ -17,24 +17,52 @@ import snowGrassTile from 'img/tiles/snow_grass_16x16.png';
 import snowStumpLeftTile from 'img/tiles/snow_stump_left_16x32.png';
 import snowStumpRightTile from 'img/tiles/snow_stump_right_16x32.png';
 import overlookHotelTile from 'img/tiles/overlook_hotel_192x80.png';
-import { htmlImageFromSource as imgFromSource } from 'img/image-utils';
+import { imageBitmapFromSource } from 'img/image-utils';
 
-export const tree = imgFromSource(bigTreeTile);
-export const smallTree = imgFromSource(smallTreeTile);
-export const grass = imgFromSource(grassTile);
-export const mudLight = imgFromSource(mudLightTile);
-export const shrubLight = imgFromSource(shrubLightTile);
-export const water = imgFromSource(waterTile);
-export const waterLeftEdge = imgFromSource(waterLeftEdgeTile);
-export const waterRightEdge = imgFromSource(waterRightEdgeTile);
-export const waterTopEdge = imgFromSource(waterTopEdgeTile);
-export const waterTopRightEdge = imgFromSource(waterTopRightEdgeTile);
-export const waterTopLeftEdge = imgFromSource(waterTopLeftEdgeTile);
-export const road = imgFromSource(roadTile);
-export const snowBoulder = imgFromSource(snowBoulderTile);
-export const snowGround = imgFromSource(snowGroundTile);
-export const snowGroundRocks = imgFromSource(snowGroundRocksTile);
-export const snowGrass = imgFromSource(snowGrassTile);
-export const snowStumpLeft = imgFromSource(snowStumpLeftTile);
-export const snowStumpRight = imgFromSource(snowStumpRightTile);
-export const hotel = imgFromSource(overlookHotelTile);
+export async function loadTiles() {
+	const tree = await imageBitmapFromSource(bigTreeTile);
+	const smallTree = await imageBitmapFromSource(smallTreeTile);
+	const grass = await imageBitmapFromSource(grassTile);
+	const mudLight = await imageBitmapFromSource(mudLightTile);
+	const shrubLight = await imageBitmapFromSource(shrubLightTile);
+	const water = await imageBitmapFromSource(waterTile);
+	const waterLeftEdge = await imageBitmapFromSource(waterLeftEdgeTile);
+	const waterRightEdge = await imageBitmapFromSource(waterRightEdgeTile);
+	const waterTopEdge = await imageBitmapFromSource(waterTopEdgeTile);
+	const waterTopRightEdge = await imageBitmapFromSource(waterTopRightEdgeTile);
+	const waterTopLeftEdge = await imageBitmapFromSource(waterTopLeftEdgeTile);
+	const road = await imageBitmapFromSource(roadTile);
+	const snowBoulder = await imageBitmapFromSource(snowBoulderTile);
+	const snowGround = await imageBitmapFromSource(snowGroundTile);
+	const snowGroundRocks = await imageBitmapFromSource(snowGroundRocksTile);
+	const snowGrass = await imageBitmapFromSource(snowGrassTile);
+	const snowStumpLeft = await imageBitmapFromSource(snowStumpLeftTile);
+	const snowStumpRight = await imageBitmapFromSource(snowStumpRightTile);
+	const hotel = await imageBitmapFromSource(overlookHotelTile);
+
+	return {
+		tree,
+		smallTree,
+		grass,
+		mudLight,
+		shrubLight,
+		water,
+		waterLeftEdge,
+		waterRightEdge,
+		waterTopEdge,
+		waterTopRightEdge,
+		waterTopLeftEdge,
+		road,
+		snowBoulder,
+		snowGround,
+		snowGroundRocks,
+		snowGrass,
+		snowStumpLeft,
+		snowStumpRight,
+		hotel
+	};
+}
+
+type ExtractPromiseType<P> = P extends Promise<infer T> ? T : never;
+
+export type TilesT = ExtractPromiseType<ReturnType<typeof loadTiles>>;
