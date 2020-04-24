@@ -17,28 +17,28 @@ import snowGrassTile from 'img/tiles/snow_grass_16x16.png';
 import snowStumpLeftTile from 'img/tiles/snow_stump_left_16x32.png';
 import snowStumpRightTile from 'img/tiles/snow_stump_right_16x32.png';
 import overlookHotelTile from 'img/tiles/overlook_hotel_192x80.png';
-import { imageBitmapFromSource } from 'img/image-utils';
+import { htmlImageFromSourceAsync as loadImage } from 'img/image-utils';
 
 export async function loadTiles() {
-	const tree = await imageBitmapFromSource(bigTreeTile);
-	const smallTree = await imageBitmapFromSource(smallTreeTile);
-	const grass = await imageBitmapFromSource(grassTile);
-	const mudLight = await imageBitmapFromSource(mudLightTile);
-	const shrubLight = await imageBitmapFromSource(shrubLightTile);
-	const water = await imageBitmapFromSource(waterTile);
-	const waterLeftEdge = await imageBitmapFromSource(waterLeftEdgeTile);
-	const waterRightEdge = await imageBitmapFromSource(waterRightEdgeTile);
-	const waterTopEdge = await imageBitmapFromSource(waterTopEdgeTile);
-	const waterTopRightEdge = await imageBitmapFromSource(waterTopRightEdgeTile);
-	const waterTopLeftEdge = await imageBitmapFromSource(waterTopLeftEdgeTile);
-	const road = await imageBitmapFromSource(roadTile);
-	const snowBoulder = await imageBitmapFromSource(snowBoulderTile);
-	const snowGround = await imageBitmapFromSource(snowGroundTile);
-	const snowGroundRocks = await imageBitmapFromSource(snowGroundRocksTile);
-	const snowGrass = await imageBitmapFromSource(snowGrassTile);
-	const snowStumpLeft = await imageBitmapFromSource(snowStumpLeftTile);
-	const snowStumpRight = await imageBitmapFromSource(snowStumpRightTile);
-	const hotel = await imageBitmapFromSource(overlookHotelTile);
+	const tree = await loadImage(bigTreeTile);
+	const smallTree = await loadImage(smallTreeTile);
+	const grass = await loadImage(grassTile);
+	const mudLight = await loadImage(mudLightTile);
+	const shrubLight = await loadImage(shrubLightTile);
+	const water = await loadImage(waterTile);
+	const waterLeftEdge = await loadImage(waterLeftEdgeTile);
+	const waterRightEdge = await loadImage(waterRightEdgeTile);
+	const waterTopEdge = await loadImage(waterTopEdgeTile);
+	const waterTopRightEdge = await loadImage(waterTopRightEdgeTile);
+	const waterTopLeftEdge = await loadImage(waterTopLeftEdgeTile);
+	const road = await loadImage(roadTile);
+	const snowBoulder = await loadImage(snowBoulderTile);
+	const snowGround = await loadImage(snowGroundTile);
+	const snowGroundRocks = await loadImage(snowGroundRocksTile);
+	const snowGrass = await loadImage(snowGrassTile);
+	const snowStumpLeft = await loadImage(snowStumpLeftTile);
+	const snowStumpRight = await loadImage(snowStumpRightTile);
+	const hotel = await loadImage(overlookHotelTile);
 
 	return {
 		tree,
