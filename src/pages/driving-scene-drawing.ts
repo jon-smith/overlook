@@ -1,10 +1,7 @@
-import { TilesT } from 'img/tiles';
 import { SpritesT } from 'img/sprites';
 import { makeArray } from 'utils/array-utils';
 import {
-	drawCar,
-	getColumn,
-	drawColumn,
+	drawSceneToCanvas,
 	CANVAS_HEIGHT,
 	CANVAS_WIDTH,
 	SceneColumnDefinition
@@ -119,8 +116,7 @@ function rgbSplitImage(imageData: ImageData, buffer: Uint8ClampedArray, t: numbe
 
 export function drawScene(
 	ctx: CanvasRenderingContext2D,
-	columnDefinitions: readonly [SceneColumnDefinition, number][],
-	tiles: TilesT,
+	columnDefinitions: readonly SceneColumnDefinition[],
 	sprites: SpritesT,
 	sceneProgress: number,
 	alpha: number,
@@ -128,23 +124,10 @@ export function drawScene(
 	rectRGBSplit = false,
 	greyscale = false
 ) {
-	const columnOffset = Math.floor(sceneProgress) % 16;
-	const columnIndex = Math.floor(sceneProgress / 16);
 	ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 	ctx.globalAlpha = alpha;
 
-	for (let c = -1; c < CANVAS_WIDTH / 16 + 1; c += 1) {
-		const column = getColumn(columnDefinitions, columnIndex + c);
-		if (column) {
-			ctx.save();
-			ctx.translate(c * 16 - columnOffset, 0.0);
-			drawColumn(ctx, column, tiles.road);
-			ctx.restore();
-		}
-	}
-
-	const carImg = Math.floor(sceneProgress % 8) > 4 ? sprites.car1 : sprites.car2;
-	drawCar(ctx, carImg);
+	drawSceneToCanvas(ctx, columnDefinitions, sprites, sceneProgress);
 
 	if (greyscale) {
 		const imageData = ctx.getImageData(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);

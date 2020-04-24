@@ -109,7 +109,7 @@ function calculateProgressAlphaAndStage(
 type ImplProps = Props & {
 	tiles: TilesT;
 	sprites: SpritesT;
-	columnDefinitions: readonly [SceneColumnDefinition, number][];
+	columnDefinitions: readonly SceneColumnDefinition[];
 	distanceToHotel: number;
 };
 
@@ -186,7 +186,6 @@ const DrivingSceneImpl = (props: ImplProps) => {
 				drawScene(
 					ctx,
 					columnDefinitions,
-					tiles,
 					sprites,
 					sceneProgressForDraw,
 					alpha,
@@ -196,7 +195,7 @@ const DrivingSceneImpl = (props: ImplProps) => {
 				);
 			}
 		}
-	}, [sceneProgressForDraw, columnDefinitions, tiles, sprites, alpha, mode]);
+	}, [sceneProgressForDraw, columnDefinitions, sprites, alpha, mode]);
 
 	useRequestAnimationFrameLoop(animationLoop, true);
 
@@ -231,7 +230,7 @@ const DrivingScene = (props: Props) => {
 			<DrivingSceneImpl
 				tiles={tiles}
 				sprites={sprites}
-				columnDefinitions={columnDefs.columnsAndDuration}
+				columnDefinitions={columnDefs.definitions}
 				distanceToHotel={columnDefs.distanceToHotel}
 				{...props}
 			/>

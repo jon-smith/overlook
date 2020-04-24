@@ -1,20 +1,32 @@
 import { TilesT } from 'img/tiles';
 import { FixedLengthArray } from 'utils/array-utils';
+import { SpritesT } from 'img/sprites';
 
 const BLANK_ROWS = 4; // This needs to be tuned for the current parallax settings to get the canvas into the centre
 const ABOVE_ROAD_ROWS = 9;
 const BELOW_ROAD_ROWS = 8;
+const TOTAL_ROWS = BLANK_ROWS + ABOVE_ROAD_ROWS + BELOW_ROAD_ROWS + 1;
 
 export const CANVAS_WIDTH = 16 * 40;
-export const CANVAS_HEIGHT = (BLANK_ROWS + ABOVE_ROAD_ROWS + BELOW_ROAD_ROWS) * 16;
+export const CANVAS_HEIGHT = TOTAL_ROWS * 16;
 
 type AboveRoadDefinition = FixedLengthArray<CanvasImageSource | null, typeof ABOVE_ROAD_ROWS>;
 
 type BelowRoadDefinition = FixedLengthArray<CanvasImageSource | null, typeof BELOW_ROAD_ROWS>;
 
-export type SceneColumnDefinition = [AboveRoadDefinition, BelowRoadDefinition];
+export type SceneColumnDefinition = {
+	above: AboveRoadDefinition;
+	road: CanvasImageSource;
+	below: BelowRoadDefinition;
+	repeats: number;
+};
 
-export function makeColumnDefinitions(tile: TilesT) {
+export function makeColumnDefinitions(
+	tile: TilesT
+): {
+	definitions: SceneColumnDefinition[];
+	distanceToHotel: number;
+} {
 	const forestTop = (roadside: CanvasImageSource): AboveRoadDefinition => [
 		tile.tree,
 		null,
@@ -257,7 +269,7 @@ export function makeColumnDefinitions(tile: TilesT) {
 		tile.snowGroundRocks
 	];
 
-	const columnsAndDuration: readonly [SceneColumnDefinition, number][] = [
+	const columnsAndDuration: readonly [[AboveRoadDefinition, BelowRoadDefinition], number][] = [
 		[[forestTop(tile.smallTree), forestBottom(tile.grass)], 25],
 		[[forestTop(tile.grass), forestBottom(tile.grass)], 1],
 		[[forestTop(tile.mudLight), forestBottom(tile.grass)], 3],
@@ -315,48 +327,72 @@ export function makeColumnDefinitions(tile: TilesT) {
 	const distanceToHotel = (totalColumns - 46) * 16;
 
 	return {
-		columnsAndDuration,
+		definitions: columnsAndDuration.map(c => ({
+			above: c[0][0],
+			road: tile.road,
+			below: c[0][1],
+			repeats: c[1]
+		})),
 		distanceToHotel
 	};
 }
 
-export function drawColumn(
-	ctx: CanvasRenderingContext2D,
-	def: SceneColumnDefinition,
-	roadTile: CanvasImageSource
-) {
+function drawColumn(ctx: CanvasRenderingContext2D, def: SceneColumnDefinition) {
 	const drawCell = (img: CanvasImageSource, row: number) => {
 		const { width, height } = img;
 		const y = (row + BLANK_ROWS) * 16;
 		ctx.drawImage(img, 0, y, width as number, height as number);
 	};
 
-	def[0].forEach((cell, i) => {
+	def.above.forEach((cell, i) => {
 		if (cell) drawCell(cell, i);
 	});
 
-	drawCell(roadTile, ABOVE_ROAD_ROWS);
+	drawCell(def.road, ABOVE_ROAD_ROWS);
 
-	def[1].forEach((cell, i) => {
+	def.below.forEach((cell, i) => {
 		if (cell) {
 			drawCell(cell, i + 1 + ABOVE_ROAD_ROWS);
 		}
 	});
 }
 
-export function drawCar(ctx: CanvasRenderingContext2D, car: CanvasImageSource) {
+function drawCar(ctx: CanvasRenderingContext2D, car: CanvasImageSource) {
 	const carImg = car;
 	ctx.drawImage(carImg, CANVAS_WIDTH / 2 - 8, (BLANK_ROWS + 9) * 16, 32, 16);
 }
 
-export function getColumn(
-	columnsAndDuration: readonly [SceneColumnDefinition, number][],
+function getColumn(
+	columns: readonly SceneColumnDefinition[],
 	index: number
 ): SceneColumnDefinition | null {
 	let cumulative = 0;
-	for (let i = 0; i < columnsAndDuration.length; ++i) {
-		cumulative += columnsAndDuration[i][1];
-		if (index < cumulative) return columnsAndDuration[i][0];
+	for (let i = 0; i < columns.length; ++i) {
+		cumulative += columns[i].repeats;
+		if (index < cumulative) return columns[i];
 	}
 	return null;
+}
+
+export function drawSceneToCanvas(
+	ctx: CanvasRenderingContext2D,
+	columnDefinitions: readonly SceneColumnDefinition[],
+	sprites: SpritesT,
+	sceneProgress: number
+) {
+	const columnOffset = Math.floor(sceneProgress) % 16;
+	const columnIndex = Math.floor(sceneProgress / 16);
+
+	for (let c = -1; c < CANVAS_WIDTH / 16 + 1; c += 1) {
+		const column = getColumn(columnDefinitions, columnIndex + c);
+		if (column) {
+			ctx.save();
+			ctx.translate(c * 16 - columnOffset, 0.0);
+			drawColumn(ctx, column);
+			ctx.restore();
+		}
+	}
+
+	const carImg = Math.floor(sceneProgress % 8) > 4 ? sprites.car1 : sprites.car2;
+	drawCar(ctx, carImg);
 }
