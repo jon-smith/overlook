@@ -1,3 +1,4 @@
+import seedrandom from 'seedrandom';
 import { SpritesT } from 'img/sprites';
 import { makeArray } from 'utils/array-utils';
 import {
@@ -6,12 +7,6 @@ import {
 	CANVAS_WIDTH,
 	SceneColumnDefinition
 } from './driving-scene-columns';
-
-const randomBetween = (from: number, to: number) => {
-	const rand01 = Math.random();
-	const range = to - from;
-	return from + range * rand01;
-};
 
 function makeGreyscale(imageData: ImageData) {
 	for (let i = 0; i < imageData.data.length; i += 4) {
@@ -39,6 +34,19 @@ type Vec2 = { x: number; y: number };
 type Vec4 = { x: number; y: number; z: number; w: number };
 
 const rgbSplitBuffer = new Uint8ClampedArray(CANVAS_WIDTH * CANVAS_HEIGHT * 4);
+
+function timeBasedRNG(timeSeconds: number, seedHz: number) {
+	const seed = Math.floor(timeSeconds * seedHz);
+	const rng = seedrandom(String(seed));
+
+	const randomBetween = (from: number, to: number) => {
+		const rand01 = rng();
+		const range = to - from;
+		return from + range * rand01;
+	};
+
+	return (from = 0, to = 1) => randomBetween(from, to);
+}
 
 function rgbSplitImage(imageData: ImageData, buffer: Uint8ClampedArray, t: number) {
 	const { width, height } = imageData;
@@ -144,28 +152,28 @@ export function drawScene(
 	}
 
 	if (rectRGBSplit) {
-		const random = Math.random();
-		if (random < 0.2) {
-			const now = new Date(Date.now());
-			const t = now.getSeconds() + now.getMilliseconds() * 0.001;
-
+		const now = new Date(Date.now());
+		const t = now.getSeconds() + now.getMilliseconds() * 0.001;
+		const genRandom = timeBasedRNG(t, 4);
+		const random = genRandom();
+		if (random < 0.3) {
 			const getRandomRectImg = () => {
-				const x = Math.floor(randomBetween(0, CANVAS_WIDTH - 30));
-				const y = Math.floor(randomBetween(0, CANVAS_HEIGHT - 50));
-				const w = Math.floor(randomBetween(30, CANVAS_WIDTH - x));
-				const h = Math.floor(randomBetween(10, 20));
+				const x = Math.floor(genRandom(0, CANVAS_WIDTH - 30));
+				const y = Math.floor(genRandom(0, CANVAS_HEIGHT - 50));
+				const w = Math.floor(genRandom(30, CANVAS_WIDTH - x));
+				const h = Math.floor(genRandom(10, 20));
 				return { x, y, w, h };
 			};
 
-			const nImages = Math.floor(randomBetween(5, 10));
+			const nImages = Math.floor(genRandom(5, 10));
 			const randomRects = makeArray(nImages, getRandomRectImg);
 
 			randomRects.forEach(r => {
 				const img = ctx.getImageData(r.x, r.y, r.w, r.h);
 				rgbSplitImage(img, rgbSplitBuffer, t);
 
-				const xOffset = Math.floor(randomBetween(-5, 5));
-				const yOffset = Math.floor(randomBetween(-5, 5));
+				const xOffset = Math.floor(genRandom(-5, 5));
+				const yOffset = Math.floor(genRandom(-5, 5));
 
 				ctx.putImageData(img, r.x + xOffset, r.y + yOffset);
 			});
