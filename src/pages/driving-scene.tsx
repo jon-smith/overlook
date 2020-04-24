@@ -3,7 +3,7 @@ import { useAsync } from '@react-hook/async';
 import useInterval from 'hooks/use-interval';
 import useStateWithTime from 'hooks/use-state-with-time';
 import { useRequestAnimationFrameLoop } from 'hooks/use-request-animation-frame';
-import { loadTiles, TilesT } from 'img/tiles';
+import { loadTiles } from 'img/tiles';
 import { loadSprites, SpritesT } from 'img/sprites';
 import {
 	CANVAS_HEIGHT,
