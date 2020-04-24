@@ -165,7 +165,7 @@ const DrivingSceneImpl = (props: ImplProps) => {
 		setSceneProgress(newProgress % totalSceneLengthPlusFadeIn);
 	}, 1000 / 25);
 
-	const { sceneProgressForDraw, alpha, stage } = calculateProgressAlphaAndStage(
+	const { sceneProgressForDraw, alpha } = calculateProgressAlphaAndStage(
 		sceneProgress,
 		distanceToHotel
 	);
