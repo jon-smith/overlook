@@ -107,22 +107,13 @@ function calculateProgressAlphaAndStage(
 }
 
 type ImplProps = Props & {
-	tiles: TilesT;
 	sprites: SpritesT;
 	columnDefinitions: readonly SceneColumnDefinition[];
 	distanceToHotel: number;
 };
 
 const DrivingSceneImpl = (props: ImplProps) => {
-	const {
-		className,
-		style,
-		tiles,
-		sprites,
-		distanceToHotel,
-		columnDefinitions,
-		onEndScene
-	} = props;
+	const { className, style, sprites, distanceToHotel, columnDefinitions, onEndScene } = props;
 
 	const { totalSceneLength, totalSceneLengthPlusFadeIn } = calculateLengths(distanceToHotel);
 
@@ -225,10 +216,9 @@ const DrivingScene = (props: Props) => {
 
 	const columnDefs = useMemo(() => (tiles ? makeColumnDefinitions(tiles) : undefined), [tiles]);
 
-	if (tiles && sprites && columnDefs)
+	if (sprites && columnDefs)
 		return (
 			<DrivingSceneImpl
-				tiles={tiles}
 				sprites={sprites}
 				columnDefinitions={columnDefs.definitions}
 				distanceToHotel={columnDefs.distanceToHotel}
